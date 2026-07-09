@@ -97,15 +97,12 @@ img {
   display: inline-flex;
   align-items: center;
   flex: 0 0 auto;
-  width: clamp(176px, 17vw, 248px);
   min-width: 0;
-  padding: 10px 12px;
-  background: var(--graphite);
 }
 
 .brand img {
-  width: 100%;
-  height: auto;
+  width: auto;
+  height: clamp(34px, 3vw, 44px);
   object-fit: contain;
 }
 
@@ -814,6 +811,10 @@ dd {
 
   .site-header {
     padding-inline: 16px;
+  }
+
+  .brand img {
+    height: clamp(28px, 8vw, 34px);
   }
 
   .hero-section {

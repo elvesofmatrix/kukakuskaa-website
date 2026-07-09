@@ -29,6 +29,6 @@ This manifest covers the assets extracted from the supplied `Images.zip` and `Sl
 
 | Original filename | Final used path | Asset type | Intended website section | Status | Alt text FI | Alt text EN |
 | --- | --- | --- | --- | --- | --- | --- |
-| `Kukakuskaa-logo-white.png` | `public/assets/brand/kukakuskaa-logo-white.png` | PNG logo, 2078 x 269 | Header brand logo | Used | KukaKuskaa Oy | KukaKuskaa Oy |
+| `Kukakuskaa-logo-.png` | `public/assets/brand/kukakuskaa-logo-dark.png` | PNG logo, 2078 x 269 | Header brand logo | Used | KukaKuskaa Oy | KukaKuskaa Oy |
 
-The approved KukaKuskaa logo is stored unchanged and referenced directly in the header. CSS is used only for sizing, spacing and contrast containment; the logo artwork is not redrawn, recreated, recoloured, cropped or simplified.
+The approved KukaKuskaa logo is stored unchanged and referenced directly in the header. CSS is used only for sizing and spacing; the logo artwork is not redrawn, recreated, recoloured, cropped or simplified.

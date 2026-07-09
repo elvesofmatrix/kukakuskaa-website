@@ -675,7 +675,7 @@ function Header({
     <header className="site-header">
       <a className="brand" href="#top" onClick={onNavigate} aria-label="KukaKuskaa Oy">
         <img
-          src="/assets/brand/kukakuskaa-logo-white.png"
+          src="/assets/brand/kukakuskaa-logo-dark.png"
           width={2078}
           height={269}
           alt="KukaKuskaa Oy"
