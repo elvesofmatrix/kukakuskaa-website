@@ -27,4 +27,8 @@ This manifest covers the assets extracted from the supplied `Images.zip` and `Sl
 
 ## Company Logo
 
-No approved KukaKuskaa company logo file was present in the repository or in the supplied logo archive inspected for this implementation. The header therefore uses a text-based brand lockup and does not invent, redraw, recreate, or recolour a logo. When the approved logo is supplied, store the original file in `public/assets/brand/` and reference it from the header without altering the artwork.
+| Original filename | Final used path | Asset type | Intended website section | Status | Alt text FI | Alt text EN |
+| --- | --- | --- | --- | --- | --- | --- |
+| `Kukakuskaa-logo-white.png` | `public/assets/brand/kukakuskaa-logo-white.png` | PNG logo, 2078 x 269 | Header brand logo | Used | KukaKuskaa Oy | KukaKuskaa Oy |
+
+The approved KukaKuskaa logo is stored unchanged and referenced directly in the header. CSS is used only for sizing, spacing and contrast containment; the logo artwork is not redrawn, recreated, recoloured, cropped or simplified.

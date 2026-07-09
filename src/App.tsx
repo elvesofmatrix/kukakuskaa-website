@@ -270,7 +270,7 @@ const copy: Record<Locale, SiteCopy> = {
     logosHeading: 'Meitä suosittelevat',
     positioning: [
       'Projektipohjainen kumppani vaativiin käytännön toimituksiin.',
-      'Lähdemme Maaningalta, mutta toteutamme projekteja kautta Suomen.',
+      'Juuret Kuopiossa, mutta toteutamme projekteja kautta Suomen.',
       'Teemme tavaravirran ja työn etenemisen näkyväksi projektikohtaisesti.',
     ],
     services: {
@@ -423,7 +423,7 @@ const copy: Record<Locale, SiteCopy> = {
     logosHeading: 'Trusted by our clients',
     positioning: [
       'Project-based partner for demanding practical deliveries.',
-      'Based in Maaninka, working on complex projects across Finland.',
+      'Rooted in Kuopio, delivering projects across Finland.',
       'Making goods flow and progress visible for each project.',
     ],
     services: {
@@ -674,10 +674,12 @@ function Header({
   return (
     <header className="site-header">
       <a className="brand" href="#top" onClick={onNavigate} aria-label="KukaKuskaa Oy">
-        <span className="brand-mark" aria-hidden="true">
-          K
-        </span>
-        <span>KukaKuskaa Oy</span>
+        <img
+          src="/assets/brand/kukakuskaa-logo-white.png"
+          width={2078}
+          height={269}
+          alt="KukaKuskaa Oy"
+        />
       </a>
 
       <button

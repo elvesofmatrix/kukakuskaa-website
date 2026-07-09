@@ -96,22 +96,17 @@ img {
 .brand {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
   flex: 0 0 auto;
-  color: var(--graphite);
-  font-weight: 760;
-  letter-spacing: 0;
+  width: clamp(176px, 17vw, 248px);
+  min-width: 0;
+  padding: 10px 12px;
+  background: var(--graphite);
 }
 
-.brand-mark {
-  display: grid;
-  width: 34px;
-  height: 34px;
-  place-items: center;
-  border: 1px solid rgba(37, 40, 42, 0.22);
-  background: #fffaf0;
-  color: var(--bluegrey);
-  font-size: 0.95rem;
+.brand img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
 }
 
 .header-panel {
