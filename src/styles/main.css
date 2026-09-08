@@ -328,8 +328,9 @@ h3 {
   line-height: 1.72;
 }
 
-.hero-support {
-  color: rgba(255, 255, 255, 0.82);
+.hero-content p.hero-support {
+  color: rgba(255, 255, 255, 0.88);
+  opacity: 1;
   max-width: 560px;
   margin-bottom: 0;
   font-size: clamp(1.05rem, 1.5vw, 1.22rem);
