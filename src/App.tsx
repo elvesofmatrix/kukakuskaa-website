@@ -260,10 +260,10 @@ const copy: Record<Locale, SiteCopy> = {
     nav: nav.fi,
     headerCta: 'Keskustellaan projektistasi',
     hero: {
-      eyebrow: 'Projektipohjainen kumppani kautta Suomen',
-      title: 'Kokonaisuuksia, joita ei voi jättää puoliksi tehtäviksi.',
+      eyebrow: 'PROJEKTITOIMITUKSET · KOKO SUOMI',
+      title: 'Kokonaisuuksia, joita\nei voi jättää\npuoliksi tehtäviksi.',
       copy:
-        'KukaKuskaa Oy on rauhallinen, käytännönläheinen kumppani silloin, kun tavaravirta, kalusteet, muutto tai tyhjennys muodostavat vaativan kokonaisuuden. Toteutamme yritysmuuttoja, työympäristöprojekteja, kalustetoimituksia, premium-kotimuuttoja ja vaativia koti- ja kuolinpesätyhjennyksiä projektina – yhdellä vastuullisella kumppanilla, selkeällä etenemisellä.',
+        'Kalustetoimitukset, yritysmuutot ja vaativat muuttoprojektit yhdeltä vastuulliselta kumppanilta.',
       primaryCta: 'Keskustellaan projektistasi',
       secondaryCta: 'Tutustu palveluihin',
     },
@@ -413,10 +413,10 @@ const copy: Record<Locale, SiteCopy> = {
     nav: nav.en,
     headerCta: 'Discuss your project',
     hero: {
-      eyebrow: 'Project-based partner across Finland',
+      eyebrow: 'PROJECT DELIVERIES · FINLAND',
       title: 'Projects too important to leave half-finished.',
       copy:
-        'KukaKuskaa is a calm, practical partner when goods flow, furnishings, relocation or clearance turn into a demanding project. We handle business relocations, workplace transitions, furniture delivery, premium home moves and demanding estate and home clearance as projects – with one responsible partner and clear progress.',
+        'Furniture deliveries, business relocations and demanding moving projects from one accountable partner.',
       primaryCta: 'Discuss your project',
       secondaryCta: 'Explore services',
     },
@@ -749,7 +749,7 @@ function Hero({ content }: { content: SiteCopy }) {
       <div className="hero-content">
         <p className="eyebrow">{content.hero.eyebrow}</p>
         <h1 id="hero-title">{content.hero.title}</h1>
-        <p>{content.hero.copy}</p>
+        <p className="hero-support">{content.hero.copy}</p>
         <div className="hero-actions">
           <a className="button button-primary" href="#contact">
             {content.hero.primaryCta}

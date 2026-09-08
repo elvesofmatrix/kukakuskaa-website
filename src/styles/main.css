@@ -236,7 +236,7 @@ img {
   min-height: calc(100svh - var(--header-height));
   display: grid;
   align-items: center;
-  padding: clamp(68px, 8vw, 118px) max(20px, calc((100vw - 1180px) / 2)) clamp(34px, 5vw, 62px);
+  padding: clamp(58px, 8vw, 112px) max(20px, calc((100vw - 1180px) / 2)) clamp(40px, 6vw, 76px);
   overflow: hidden;
 }
 
@@ -262,7 +262,7 @@ img {
 }
 
 .hero-content {
-  width: min(720px, 100%);
+  width: min(760px, 100%);
   color: #fffdf8;
 }
 
@@ -294,13 +294,14 @@ h3 {
 }
 
 h1 {
-  margin-bottom: 18px;
+  margin-bottom: clamp(22px, 3vw, 34px);
   color: #fffdf8;
   font-family: Georgia, "Times New Roman", serif;
-  font-size: clamp(2.9rem, 5.8vw, 4.72rem);
+  font-size: clamp(3.25rem, 6.7vw, 6.4rem);
   font-weight: 500;
-  line-height: 0.94;
-  max-width: 900px;
+  line-height: 0.92;
+  max-width: 920px;
+  white-space: pre-line;
 }
 
 h2 {
@@ -327,16 +328,20 @@ h3 {
   line-height: 1.72;
 }
 
-.hero-content p:not(.eyebrow) {
-  color: rgba(255, 253, 248, 0.9);
-  max-width: 690px;
+.hero-support {
+  color: rgba(255, 253, 248, 0.94);
+  max-width: 560px;
+  margin-bottom: 0;
+  font-size: clamp(1.05rem, 1.5vw, 1.22rem);
+  font-weight: 430;
+  line-height: 1.55;
 }
 
 .hero-actions {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
-  margin-top: 22px;
+  margin-top: clamp(24px, 3.8vw, 42px);
 }
 
 .logo-strip {
@@ -818,8 +823,8 @@ dd {
   }
 
   .hero-section {
-    min-height: 780px;
-    padding: 104px 16px 38px;
+    min-height: calc(100svh - var(--header-height));
+    padding: clamp(54px, 12vw, 82px) 16px clamp(30px, 9vw, 48px);
   }
 
   .hero-image {
@@ -830,6 +835,26 @@ dd {
     background:
       linear-gradient(180deg, rgba(20, 25, 27, 0.4), rgba(20, 25, 27, 0.7)),
       linear-gradient(90deg, rgba(20, 25, 27, 0.64), rgba(20, 25, 27, 0.24));
+  }
+
+  h1 {
+    margin-bottom: 20px;
+    font-size: clamp(2.7rem, 12vw, 3.75rem);
+    line-height: 0.93;
+  }
+
+  .hero-content .eyebrow {
+    margin-bottom: 18px;
+  }
+
+  .hero-support {
+    max-width: 21rem;
+    font-size: 1.02rem;
+    line-height: 1.5;
+  }
+
+  .hero-actions {
+    margin-top: 24px;
   }
 
   .hero-actions,
