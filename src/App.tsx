@@ -23,6 +23,7 @@ type ImageAsset = {
   width: number;
   height: number;
   alt: Record<Locale, string>;
+  objectPosition?: string;
 };
 
 type LogoAsset = {
@@ -136,12 +137,13 @@ const images = {
     },
   },
   business: {
-    src: '/assets/images/service-business-relocation.webp',
-    width: 1447,
-    height: 1087,
+    src: '/assets/images/business-relocation-care-bed-installation.webp',
+    width: 1806,
+    height: 871,
+    objectPosition: '58% 50%',
     alt: {
-      fi: 'Suojattua toimistokalustetta kannetaan huolellisesti työympäristöprojektissa.',
-      en: 'Protected office furniture being carried carefully during a workplace project.',
+      fi: 'KukaKuskaa-asentajat asentamassa hoivasänkyä',
+      en: 'KukaKuskaa installers assembling a care bed',
     },
   },
   furniture: {
@@ -827,6 +829,7 @@ function Services({ content, locale }: { content: SiteCopy; locale: Locale }) {
                 height={service.image.height}
                 alt={service.image.alt[locale]}
                 loading="lazy"
+                style={service.image.objectPosition ? { objectPosition: service.image.objectPosition } : undefined}
               />
             </div>
             <div className="service-copy">
