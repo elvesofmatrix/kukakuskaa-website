@@ -1,6 +1,7 @@
 import { FormEvent, useEffect, useMemo, useState } from 'react';
 
 type Locale = 'fi' | 'en';
+type FormStatus = 'idle' | 'submitting' | 'success' | 'error';
 
 type NavItem = {
   id: string;
@@ -93,7 +94,9 @@ type SiteCopy = {
     validation: {
       required: string;
       email: string;
-      inactive: string;
+      submitting: string;
+      success: string;
+      error: string;
     };
   };
   footer: {
@@ -378,7 +381,7 @@ const copy: Record<Locale, SiteCopy> = {
         email: 'Sähköposti',
         type: 'Projektin tyyppi',
         description: 'Lyhyt kuvaus projektista',
-        submit: 'Tarkista lomake',
+        submit: 'Lähetä viesti',
       },
       projectTypes: [
         'Yritysmuutto',
@@ -390,8 +393,9 @@ const copy: Record<Locale, SiteCopy> = {
       validation: {
         required: 'Täytä tämä kenttä.',
         email: 'Anna toimiva sähköpostiosoite.',
-        inactive:
-          'Lomakkeen lähetys ei ole vielä käytössä. Ota yhteyttä puhelimitse tai sähköpostilla.',
+        submitting: 'Lähetetään viestiä...',
+        success: 'Kiitos. Viesti on lähetetty, ja palaamme asiaan mahdollisimman pian.',
+        error: 'Viestin lähetys ei onnistunut. Yritä hetken kuluttua uudelleen tai ota yhteyttä puhelimitse tai sähköpostilla.',
       },
     },
     footer: {
@@ -531,7 +535,7 @@ const copy: Record<Locale, SiteCopy> = {
         email: 'Email',
         type: 'Type of project',
         description: 'Brief project description',
-        submit: 'Check form',
+        submit: 'Send message',
       },
       projectTypes: [
         'Business relocation',
@@ -543,8 +547,9 @@ const copy: Record<Locale, SiteCopy> = {
       validation: {
         required: 'Fill in this field.',
         email: 'Enter a valid email address.',
-        inactive:
-          'Form submission is not active yet. Please contact us by phone or email.',
+        submitting: 'Sending message...',
+        success: 'Thank you. Your message has been sent, and we will get back to you as soon as possible.',
+        error: 'The message could not be sent. Please try again shortly or contact us by phone or email.',
       },
     },
     footer: {
@@ -593,7 +598,7 @@ function App() {
       name: 'KukaKuskaa Oy',
       url: 'https://www.kukakuskaa.com/',
       telephone: '+358440335538',
-      email: 'kimi.kuosmanen@kukakuskaa.com',
+      email: 'myynti@kukakuskaa.com',
       address: {
         '@type': 'PostalAddress',
         streetAddress: 'Eteläniementie 21',
@@ -937,6 +942,7 @@ function TrustSection({ content, locale }: { content: SiteCopy; locale: Locale }
 function ContactSection({ content, locale }: { content: SiteCopy; locale: Locale }) {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [notice, setNotice] = useState('');
+  const [status, setStatus] = useState<FormStatus>('idle');
 
   function validate(form: HTMLFormElement) {
     const data = new FormData(form);
@@ -956,12 +962,48 @@ function ContactSection({ content, locale }: { content: SiteCopy; locale: Locale
     return nextErrors;
   }
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const nextErrors = validate(event.currentTarget);
+    const form = event.currentTarget;
+    const nextErrors = validate(form);
     setErrors(nextErrors);
-    setNotice(Object.keys(nextErrors).length === 0 ? content.contact.validation.inactive : '');
-    // Future submission handling will connect here when the approved form endpoint exists.
+    setNotice('');
+
+    if (Object.keys(nextErrors).length > 0) {
+      setStatus('idle');
+      return;
+    }
+
+    setStatus('submitting');
+
+    try {
+      const formData = new FormData(form);
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(Object.fromEntries(formData.entries())),
+      });
+
+      const result = await response.json().catch(() => null);
+
+      if (!response.ok || !result?.ok) {
+        const serverErrors = result?.errors && typeof result.errors === 'object' ? result.errors : {};
+        setErrors(serverErrors);
+        setNotice(content.contact.validation.error);
+        setStatus('error');
+        return;
+      }
+
+      form.reset();
+      setErrors({});
+      setNotice(content.contact.validation.success);
+      setStatus('success');
+    } catch {
+      setNotice(content.contact.validation.error);
+      setStatus('error');
+    }
   }
 
   return (
@@ -974,8 +1016,8 @@ function ContactSection({ content, locale }: { content: SiteCopy; locale: Locale
           <address>
             <strong>Kimi Kuosmanen</strong>
             <span>KukaKuskaa Oy</span>
-            <a href="tel:+358440335538">044 0335 538</a>
-            <a href="mailto:kimi.kuosmanen@kukakuskaa.com">kimi.kuosmanen@kukakuskaa.com</a>
+            <a href="tel:+358440335538">044 033 5538</a>
+            <a href="mailto:myynti@kukakuskaa.com">myynti@kukakuskaa.com</a>
             <span>www.kukakuskaa.com</span>
             <span>Eteläniementie 21, 71750 Maaninka</span>
           </address>
@@ -989,6 +1031,10 @@ function ContactSection({ content, locale }: { content: SiteCopy; locale: Locale
         </div>
 
         <form className="contact-form" onSubmit={handleSubmit} noValidate>
+          <label className="honeypot" aria-hidden="true">
+            <span>Website</span>
+            <input name="website" type="text" tabIndex={-1} autoComplete="off" />
+          </label>
           <FormField label={content.contact.fields.name} name="name" error={errors.name} required />
           <FormField label={content.contact.fields.company} name="company" />
           <FormField label={content.contact.fields.phone} name="phone" type="tel" />
@@ -1013,8 +1059,8 @@ function ContactSection({ content, locale }: { content: SiteCopy; locale: Locale
             />
             {errors.description ? <small>{errors.description}</small> : null}
           </label>
-          <button className="button button-primary span-2" type="submit">
-            {content.contact.fields.submit}
+          <button className="button button-primary span-2" type="submit" disabled={status === 'submitting'}>
+            {status === 'submitting' ? content.contact.validation.submitting : content.contact.fields.submit}
           </button>
           {notice ? (
             <p className="form-notice" role="status">

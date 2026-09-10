@@ -12,7 +12,7 @@ English secondary language:<br>/en
 
 Company details:
 
-KukaKuskaa Oy<br>Contact person: Kimi Kuosmanen<br>Phone: 044 0335 538<br>Email: [kimi.kuosmanen@kukakuskaa.com](mailto:kimi.kuosmanen@kukakuskaa.com)<br>Website: [www.kukakuskaa.com](https://www.kukakuskaa.com)<br>Address: Eteläniementie 21, 71750 Maaninka, Finland
+KukaKuskaa Oy<br>Contact person: Kimi Kuosmanen<br>Phone: 044 033 5538<br>Email: [myynti@kukakuskaa.com](mailto:myynti@kukakuskaa.com)<br>Website: [www.kukakuskaa.com](https://www.kukakuskaa.com)<br>Address: Eteläniementie 21, 71750 Maaninka, Finland
 
 A KukaKuskaa logo is attached.
 
@@ -1004,7 +1004,7 @@ It must state:
 
 Use these exact details in the proposed contact section:
 
-Kimi Kuosmanen<br>KukaKuskaa Oy<br>044 0335 538<br>[kimi.kuosmanen@kukakuskaa.com](mailto:kimi.kuosmanen@kukakuskaa.com)<br>[www.kukakuskaa.com](https://www.kukakuskaa.com)<br>Eteläniementie 21, 71750 Maaninka
+Kimi Kuosmanen<br>KukaKuskaa Oy<br>044 033 5538<br>[myynti@kukakuskaa.com](mailto:myynti@kukakuskaa.com)<br>[www.kukakuskaa.com](https://www.kukakuskaa.com)<br>Eteläniementie 21, 71750 Maaninka
 
 The recommended design should make the phone number and email clearly clickable.
 
@@ -1570,9 +1570,9 @@ Vältä identtistä sisältöä molemmilla kielillä: EN-teksti kirjoitetaan nat
 
   - Address: Eteläniementie 21, 71750 Maaninka, Finland
 
-  - Telephone: +358 44 0335 538
+  - Telephone: +358 44 033 5538
 
-  - Email: [kimi.kuosmanen@kukakuskaa.com](mailto:kimi.kuosmanen@kukakuskaa.com)
+  - Email: [myynti@kukakuskaa.com](mailto:myynti@kukakuskaa.com)
 
   - URL: https://www.kukakuskaa.com
 
@@ -1902,7 +1902,7 @@ Jokaisessa:
 
 - EN-otsikko:<br>“Contact details”
 
-- FI-copy:<br>Kimi Kuosmanen<br>KukaKuskaa Oy<br>044 0335 538<br>[kimi.kuosmanen@kukakuskaa.com](mailto:kimi.kuosmanen@kukakuskaa.com)<br>[www.kukakuskaa.com](http://www.kukakuskaa.com)<br>Eteläniementie 21, 71750 Maaninka
+- FI-copy:<br>Kimi Kuosmanen<br>KukaKuskaa Oy<br>044 033 5538<br>[myynti@kukakuskaa.com](mailto:myynti@kukakuskaa.com)<br>[www.kukakuskaa.com](http://www.kukakuskaa.com)<br>Eteläniementie 21, 71750 Maaninka
 
 - EN-copy:<br>Sama englanniksi, kieli mukautettuna (Street, Finland).
 
@@ -2082,7 +2082,7 @@ FI:
 
 Paras tapa aloittaa on lyhyt keskustelu projektista: sen laajuudesta, aikataulusta ja siitä, mitä käytännön töitä haluat siirtää KukaKuskaa’n vastuulle. Voit soittaa, lähettää sähköpostia tai täyttää yhteydenottolomakkeen.
 
-Kimi Kuosmanen<br>KukaKuskaa Oy<br>044 0335 538<br>[kimi.kuosmanen@kukakuskaa.com](mailto:kimi.kuosmanen@kukakuskaa.com)<br>[www.kukakuskaa.com](http://www.kukakuskaa.com)<br>Eteläniementie 21, 71750 Maaninka
+Kimi Kuosmanen<br>KukaKuskaa Oy<br>044 033 5538<br>[myynti@kukakuskaa.com](mailto:myynti@kukakuskaa.com)<br>[www.kukakuskaa.com](http://www.kukakuskaa.com)<br>Eteläniementie 21, 71750 Maaninka
 
 Puhelin ja sähköposti ovat klikattavia – valitse sinulle luontevin tapa ottaa yhteyttä.
 
@@ -2092,7 +2092,7 @@ EN:
 
 The best way to begin is a short conversation about your project: its scope, timing and which practical tasks you want KukaKuskaa to take responsibility for. You can call, send an email or use the contact form.
 
-Kimi Kuosmanen<br>KukaKuskaa Oy<br>+358 44 0335 538<br>[kimi.kuosmanen@kukakuskaa.com](mailto:kimi.kuosmanen@kukakuskaa.com)<br>[www.kukakuskaa.com](http://www.kukakuskaa.com)<br>Eteläniementie 21, 71750 Maaninka, Finland
+Kimi Kuosmanen<br>KukaKuskaa Oy<br>+358 44 033 5538<br>[myynti@kukakuskaa.com](mailto:myynti@kukakuskaa.com)<br>[www.kukakuskaa.com](http://www.kukakuskaa.com)<br>Eteläniementie 21, 71750 Maaninka, Finland
 
 Phone and email are fully clickable – choose the way that suits you best.
 
