@@ -3,7 +3,6 @@ const RESEND_ENDPOINT = 'https://api.resend.com/emails';
 
 const FIELD_LIMITS = {
   name: 120,
-  company: 160,
   phone: 40,
   email: 254,
   projectType: 120,
@@ -69,7 +68,6 @@ function validate(payload) {
 function buildEmail(values) {
   const rows = [
     ['Nimi / Name', values.name],
-    ['Yritys / Company', values.company || '-'],
     ['Puhelin / Phone', values.phone || '-'],
     ['Sähköposti / Email', values.email],
     ['Projektin tyyppi / Project type', values.projectType],

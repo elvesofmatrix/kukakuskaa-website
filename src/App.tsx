@@ -2,6 +2,7 @@ import { FormEvent, useEffect, useMemo, useRef, useState } from 'react';
 
 type Locale = 'fi' | 'en';
 type FormStatus = 'idle' | 'submitting' | 'success' | 'error';
+type ProjectTypeKey = 'business' | 'furniture' | 'home' | 'clearance' | 'other';
 
 type NavItem = {
   id: string;
@@ -15,6 +16,7 @@ type Service = {
   responsibility: string;
   outcome: string;
   cta: string;
+  contactIntent?: ProjectTypeKey;
   image: ImageAsset;
 };
 
@@ -93,14 +95,13 @@ type SiteCopy = {
     copy: string;
     fields: {
       name: string;
-      company: string;
       phone: string;
       email: string;
       type: string;
       description: string;
       submit: string;
     };
-    projectTypes: string[];
+    projectTypes: Record<ProjectTypeKey, string>;
     validation: {
       required: string;
       email: string;
@@ -183,12 +184,12 @@ const images = {
     },
   },
   visibility: {
-    src: '/assets/images/project-visibility.webp',
+    src: '/assets/images/project-visibility-dashboard.webp',
     width: 1672,
     height: 941,
     alt: {
-      fi: 'Projektivastaava tarkistaa etenemisnäkymää kalustetoimituksen yhteydessä.',
-      en: 'Project lead reviewing progress visibility during a furniture delivery.',
+      fi: 'Asiakas seuraamassa KukaKuskaa PRO -projektin etenemistä',
+      en: 'Customer following project progress with KukaKuskaa PRO',
     },
   },
   process: {
@@ -201,21 +202,12 @@ const images = {
     },
   },
   trust: {
-    src: '/assets/images/service-office-installation.webp',
+    src: '/assets/images/project-trust-office-fitout.webp',
     width: 1536,
     height: 1024,
     alt: {
-      fi: 'Kalusteasennus tehdään suojatussa työympäristössä rauhallisesti ja tarkasti.',
-      en: 'Furniture installation handled carefully in a protected workplace environment.',
-    },
-  },
-  contact: {
-    src: '/assets/images/contact-project-discussion.webp',
-    width: 1536,
-    height: 1024,
-    alt: {
-      fi: 'Projektista keskustellaan suunnitelman ja muistiinpanojen äärellä.',
-      en: 'Project discussion around a plan and notes.',
+      fi: 'KukaKuskaa PRO -tiimi toteuttamassa toimitusta asiakkaan toimitiloissa',
+      en: 'KukaKuskaa PRO team carrying out a project delivery at a customer site',
     },
   },
 } satisfies Record<string, ImageAsset>;
@@ -313,6 +305,7 @@ const copy: Record<Locale, SiteCopy> = {
           outcome:
             'Tavoitteena on selkeästi valmis tila ja rauhallinen siirtymä, jossa vastuu ei hajoa usealle tekijälle.',
           cta: 'Kerro yritysprojektista',
+          contactIntent: 'business',
           image: images.business,
         },
         {
@@ -325,6 +318,7 @@ const copy: Record<Locale, SiteCopy> = {
           outcome:
             'Kalusteet päätyvät oikeaan paikkaan, oikeassa järjestyksessä ja projektin kokonaisuutta tukien.',
           cta: 'Suunnitellaan kalustetoimitus',
+          contactIntent: 'furniture',
           image: images.furniture,
         },
         {
@@ -337,6 +331,7 @@ const copy: Record<Locale, SiteCopy> = {
           outcome:
             'Asiakas saa rauhallisen, huolellisen ja läpinäkyvän muuttoprojektin ilman tarvetta koordinoida kaikkea itse.',
           cta: 'Keskustellaan kotimuutosta',
+          contactIntent: 'home',
           image: images.home,
         },
         {
@@ -349,6 +344,7 @@ const copy: Record<Locale, SiteCopy> = {
           outcome:
             'Lopputuloksena on selkeä tila, järjestelmällinen eteneminen ja dokumentoitu valmistuminen silloin, kun se projektiin sopii.',
           cta: 'Sovi arvio tyhjennysprojektista',
+          contactIntent: 'clearance',
           image: images.clearance,
         },
       ],
@@ -405,21 +401,20 @@ const copy: Record<Locale, SiteCopy> = {
       copy:
         'Paras tapa aloittaa on lyhyt keskustelu projektisi laajuudesta, aikataulusta ja siitä, mistä käytännön kokonaisuudesta haluat KukaKuskaa’n ottavan vastuun.',
       fields: {
-        name: 'Nimi',
-        company: 'Yritys / organisaatio',
+        name: 'Nimi, yritys tai yhteisö',
         phone: 'Puhelin',
         email: 'Sähköposti',
         type: 'Projektin tyyppi',
         description: 'Lyhyt kuvaus projektista',
         submit: 'Lähetä viesti',
       },
-      projectTypes: [
-        'Yritysmuutto',
-        'Kalustetoimitus',
-        'Kotimuutto',
-        'Tyhjennysprojekti',
-        'Muu vaativa kokonaisuus',
-      ],
+      projectTypes: {
+        business: 'Yritysprojekti',
+        furniture: 'Kalustetoimitus',
+        home: 'Kotimuutto',
+        clearance: 'Tyhjennysprojekti',
+        other: 'Muu vaativa kokonaisuus',
+      },
       validation: {
         required: 'Täytä tämä kenttä.',
         email: 'Anna toimiva sähköpostiosoite.',
@@ -476,6 +471,7 @@ const copy: Record<Locale, SiteCopy> = {
           outcome:
             'The goal is a clearly completed space and a calm transition where responsibility does not split across several suppliers.',
           cta: 'Tell us about the business project',
+          contactIntent: 'business',
           image: images.business,
         },
         {
@@ -488,6 +484,7 @@ const copy: Record<Locale, SiteCopy> = {
           outcome:
             'Furniture reaches the right place, in the right order and in a way that supports the whole project.',
           cta: 'Plan a furniture delivery',
+          contactIntent: 'furniture',
           image: images.furniture,
         },
         {
@@ -500,6 +497,7 @@ const copy: Record<Locale, SiteCopy> = {
           outcome:
             'The customer gets a calm, careful and visible relocation project without having to coordinate everything alone.',
           cta: 'Discuss a home relocation',
+          contactIntent: 'home',
           image: images.home,
         },
         {
@@ -512,6 +510,7 @@ const copy: Record<Locale, SiteCopy> = {
           outcome:
             'The result is a clear space, structured progress and documented completion where appropriate.',
           cta: 'Arrange a clearance assessment',
+          contactIntent: 'clearance',
           image: images.clearance,
         },
       ],
@@ -568,21 +567,20 @@ const copy: Record<Locale, SiteCopy> = {
       copy:
         'The best way to begin is a short conversation about your project: its scope, timing and which practical tasks you want KukaKuskaa to take responsibility for.',
       fields: {
-        name: 'Name',
-        company: 'Company / organisation',
+        name: 'Name, company or organisation',
         phone: 'Phone',
         email: 'Email',
         type: 'Type of project',
         description: 'Brief project description',
         submit: 'Send message',
       },
-      projectTypes: [
-        'Business relocation',
-        'Furniture delivery',
-        'Home relocation',
-        'Clearance project',
-        'Other demanding project',
-      ],
+      projectTypes: {
+        business: 'Business relocation',
+        furniture: 'Furniture delivery',
+        home: 'Home relocation',
+        clearance: 'Clearance project',
+        other: 'Other demanding project',
+      },
       validation: {
         required: 'Fill in this field.',
         email: 'Enter a valid email address.',
@@ -598,6 +596,8 @@ const copy: Record<Locale, SiteCopy> = {
   },
 };
 
+const projectTypeOrder: ProjectTypeKey[] = ['business', 'furniture', 'home', 'clearance', 'other'];
+
 function getLocaleFromPath(): Locale {
   return window.location.pathname.startsWith('/en') ? 'en' : 'fi';
 }
@@ -609,6 +609,7 @@ function buildUrl(path: string): string {
 function App() {
   const [locale, setLocale] = useState<Locale>(() => getLocaleFromPath());
   const [menuOpen, setMenuOpen] = useState(false);
+  const [selectedProjectType, setSelectedProjectType] = useState<ProjectTypeKey | ''>('');
   const content = copy[locale];
   const currentYear = new Date().getFullYear();
 
@@ -665,6 +666,10 @@ function App() {
     setMenuOpen(false);
   }
 
+  function clearContactIntent() {
+    setSelectedProjectType('');
+  }
+
   return (
     <div className="site-shell">
       <Header
@@ -674,25 +679,32 @@ function App() {
         alternateHref={alternateHref}
         onMenuToggle={() => setMenuOpen((open) => !open)}
         onNavigate={() => setMenuOpen(false)}
+        onContactNavigate={clearContactIntent}
         onLanguageChange={switchLanguage}
       />
 
       <main>
-        <Hero content={content} />
+        <Hero content={content} onContactNavigate={clearContactIntent} />
         <ClientLogoStrip content={content} />
         <PositioningStrip points={content.positioning} />
-        <Services content={content} locale={locale} />
+        <Services content={content} locale={locale} onContactIntent={setSelectedProjectType} />
         <ProjectVisibility content={content} locale={locale} />
         <ProcessSection content={content} locale={locale} />
         <ProjectFilmSection content={content} />
         <TrustSection content={content} locale={locale} />
-        <ContactSection content={content} locale={locale} />
+        <ContactSection
+          content={content}
+          locale={locale}
+          selectedProjectType={selectedProjectType}
+          onProjectTypeChange={setSelectedProjectType}
+        />
       </main>
 
       <Footer
         content={content}
         locale={locale}
         currentYear={currentYear}
+        onContactNavigate={clearContactIntent}
         onLanguageChange={switchLanguage}
       />
     </div>
@@ -706,6 +718,7 @@ function Header({
   alternateHref,
   onMenuToggle,
   onNavigate,
+  onContactNavigate,
   onLanguageChange,
 }: {
   content: SiteCopy;
@@ -714,8 +727,16 @@ function Header({
   alternateHref: string;
   onMenuToggle: () => void;
   onNavigate: () => void;
+  onContactNavigate: () => void;
   onLanguageChange: (locale: Locale) => void;
 }) {
+  function handleNavClick(itemId: string) {
+    if (itemId === 'contact') {
+      onContactNavigate();
+    }
+    onNavigate();
+  }
+
   return (
     <header className="site-header">
       <a className="brand" href="#top" onClick={onNavigate} aria-label="KukaKuskaa Oy">
@@ -742,7 +763,7 @@ function Header({
       <div className={`header-panel${menuOpen ? ' is-open' : ''}`} id="site-navigation">
         <nav className="site-nav" aria-label={content.navLabel}>
           {content.nav.map((item) => (
-            <a key={item.id} href={`#${item.id}`} onClick={onNavigate}>
+            <a key={item.id} href={`#${item.id}`} onClick={() => handleNavClick(item.id)}>
               {item.label}
             </a>
           ))}
@@ -770,7 +791,14 @@ function Header({
               EN
             </a>
           </div>
-          <a className="header-cta" href="#contact" onClick={onNavigate}>
+          <a
+            className="header-cta"
+            href="#contact"
+            onClick={() => {
+              onContactNavigate();
+              onNavigate();
+            }}
+          >
             {content.headerCta}
           </a>
         </div>
@@ -779,7 +807,7 @@ function Header({
   );
 }
 
-function Hero({ content }: { content: SiteCopy }) {
+function Hero({ content, onContactNavigate }: { content: SiteCopy; onContactNavigate: () => void }) {
   return (
     <section className="hero-section" id="top" aria-labelledby="hero-title">
       <img
@@ -796,7 +824,7 @@ function Hero({ content }: { content: SiteCopy }) {
         <h1 id="hero-title">{content.hero.title}</h1>
         <p className="hero-support">{content.hero.copy}</p>
         <div className="hero-actions">
-          <a className="button button-primary" href="#contact">
+          <a className="button button-primary" href="#contact" onClick={onContactNavigate}>
             {content.hero.primaryCta}
           </a>
           <a className="button button-secondary" href="#services">
@@ -848,7 +876,15 @@ function PositioningStrip({ points }: { points: string[] }) {
   );
 }
 
-function Services({ content, locale }: { content: SiteCopy; locale: Locale }) {
+function Services({
+  content,
+  locale,
+  onContactIntent,
+}: {
+  content: SiteCopy;
+  locale: Locale;
+  onContactIntent: (intent: ProjectTypeKey) => void;
+}) {
   return (
     <section className="services-section section-pad" id="services" aria-labelledby="services-title">
       <div className="section-heading">
@@ -888,7 +924,15 @@ function Services({ content, locale }: { content: SiteCopy; locale: Locale }) {
                   <dd>{service.outcome}</dd>
                 </div>
               </dl>
-              <a className="text-link" href="#contact">
+              <a
+                className="text-link"
+                href="#contact"
+                onClick={() => {
+                  if (service.contactIntent) {
+                    onContactIntent(service.contactIntent);
+                  }
+                }}
+              >
                 {service.cta}
               </a>
             </div>
@@ -1050,10 +1094,25 @@ function TrustSection({ content, locale }: { content: SiteCopy; locale: Locale }
   );
 }
 
-function ContactSection({ content, locale }: { content: SiteCopy; locale: Locale }) {
+function ContactSection({
+  content,
+  locale,
+  selectedProjectType,
+  onProjectTypeChange,
+}: {
+  content: SiteCopy;
+  locale: Locale;
+  selectedProjectType: ProjectTypeKey | '';
+  onProjectTypeChange: (projectType: ProjectTypeKey | '') => void;
+}) {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [notice, setNotice] = useState('');
   const [status, setStatus] = useState<FormStatus>('idle');
+  const selectedProjectTypeLabel = selectedProjectType ? content.contact.projectTypes[selectedProjectType] : '';
+
+  function resolveProjectTypeKey(value: string): ProjectTypeKey | '' {
+    return projectTypeOrder.find((key) => content.contact.projectTypes[key] === value) || '';
+  }
 
   function validate(form: HTMLFormElement) {
     const data = new FormData(form);
@@ -1108,6 +1167,7 @@ function ContactSection({ content, locale }: { content: SiteCopy; locale: Locale
       }
 
       form.reset();
+      onProjectTypeChange('');
       setErrors({});
       setNotice(content.contact.validation.success);
       setStatus('success');
@@ -1132,13 +1192,6 @@ function ContactSection({ content, locale }: { content: SiteCopy; locale: Locale
             <span>www.kukakuskaa.com</span>
             <span>Eteläniementie 21, 71750 Maaninka</span>
           </address>
-          <img
-            src={images.contact.src}
-            width={images.contact.width}
-            height={images.contact.height}
-            alt={images.contact.alt[locale]}
-            loading="lazy"
-          />
         </div>
 
         <form className="contact-form" onSubmit={handleSubmit} noValidate>
@@ -1146,16 +1199,23 @@ function ContactSection({ content, locale }: { content: SiteCopy; locale: Locale
             <span>Website</span>
             <input name="website" type="text" tabIndex={-1} autoComplete="off" />
           </label>
-          <FormField label={content.contact.fields.name} name="name" error={errors.name} required />
-          <FormField label={content.contact.fields.company} name="company" />
+          <FormField className="span-2" label={content.contact.fields.name} name="name" error={errors.name} required />
           <FormField label={content.contact.fields.phone} name="phone" type="tel" />
           <FormField label={content.contact.fields.email} name="email" type="email" error={errors.email} required />
           <label>
             <span>{content.contact.fields.type}</span>
-            <select name="projectType" required aria-invalid={errors.projectType ? 'true' : undefined}>
+            <select
+              name="projectType"
+              value={selectedProjectTypeLabel}
+              required
+              aria-invalid={errors.projectType ? 'true' : undefined}
+              onChange={(event) => onProjectTypeChange(resolveProjectTypeKey(event.currentTarget.value))}
+            >
               <option value="">{locale === 'fi' ? 'Valitse' : 'Choose'}</option>
-              {content.contact.projectTypes.map((type) => (
-                <option key={type}>{type}</option>
+              {projectTypeOrder.map((typeKey) => (
+                <option key={typeKey} value={content.contact.projectTypes[typeKey]}>
+                  {content.contact.projectTypes[typeKey]}
+                </option>
               ))}
             </select>
             {errors.projectType ? <small>{errors.projectType}</small> : null}
@@ -1185,12 +1245,14 @@ function ContactSection({ content, locale }: { content: SiteCopy; locale: Locale
 }
 
 function FormField({
+  className,
   label,
   name,
   type = 'text',
   error,
   required = false,
 }: {
+  className?: string;
   label: string;
   name: string;
   type?: string;
@@ -1198,7 +1260,7 @@ function FormField({
   required?: boolean;
 }) {
   return (
-    <label>
+    <label className={className}>
       <span>{label}</span>
       <input name={name} type={type} required={required} aria-invalid={error ? 'true' : undefined} />
       {error ? <small>{error}</small> : null}
@@ -1210,11 +1272,13 @@ function Footer({
   content,
   locale,
   currentYear,
+  onContactNavigate,
   onLanguageChange,
 }: {
   content: SiteCopy;
   locale: Locale;
   currentYear: number;
+  onContactNavigate: () => void;
   onLanguageChange: (locale: Locale) => void;
 }) {
   return (
@@ -1225,7 +1289,15 @@ function Footer({
       </div>
       <nav aria-label={content.navLabel}>
         {content.nav.map((item) => (
-          <a key={item.id} href={`#${item.id}`}>
+          <a
+            key={item.id}
+            href={`#${item.id}`}
+            onClick={() => {
+              if (item.id === 'contact') {
+                onContactNavigate();
+              }
+            }}
+          >
             {item.label}
           </a>
         ))}

@@ -478,8 +478,7 @@ h3 {
 
 .service-media img,
 .section-image,
-.trust-panel img,
-.contact-copy img {
+.trust-panel img {
   width: 100%;
   height: auto;
   aspect-ratio: 4 / 3;
@@ -543,8 +542,7 @@ dd {
 }
 
 .section-image,
-.trust-panel img,
-.contact-copy img {
+.trust-panel img {
   box-shadow: var(--shadow);
 }
 
@@ -784,11 +782,6 @@ dd {
   border-bottom: 1px solid rgba(255, 253, 248, 0.48);
 }
 
-.contact-copy img {
-  aspect-ratio: 3 / 2;
-  opacity: 0.9;
-}
-
 .contact-form {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -943,6 +936,14 @@ dd {
   .trust-panel,
   .contact-layout {
     grid-template-columns: 1fr;
+  }
+
+  .trust-panel {
+    padding: 0 0 clamp(26px, 5vw, 56px);
+  }
+
+  .trust-panel > div {
+    padding: clamp(26px, 5vw, 56px) clamp(26px, 5vw, 56px) 0;
   }
 
   .service-row:nth-child(even) .service-media {
