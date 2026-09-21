@@ -1,4 +1,4 @@
-import { FormEvent, useEffect, useMemo, useState } from 'react';
+import { FormEvent, useEffect, useMemo, useRef, useState } from 'react';
 
 type Locale = 'fi' | 'en';
 type FormStatus = 'idle' | 'submitting' | 'success' | 'error';
@@ -71,6 +71,15 @@ type SiteCopy = {
     heading: string;
     intro: string;
     steps: string[];
+  };
+  projectFilm: {
+    eyebrow: string;
+    heading: string;
+    copy: string;
+    playLabel: string;
+    duration: string;
+    ariaLabel: string;
+    centerAriaLabel: string;
   };
   trust: {
     kicker: string;
@@ -210,6 +219,16 @@ const images = {
     },
   },
 } satisfies Record<string, ImageAsset>;
+
+const projectFilmMedia = {
+  video: '/assets/video/kukakuskaa-pro-project-film.mp4',
+  posterDesktop: '/assets/images/kukakuskaa-pro-video-poster-desktop.webp',
+  posterMobile: '/assets/images/kukakuskaa-pro-video-poster-mobile.webp',
+  desktopWidth: 1536,
+  desktopHeight: 864,
+  mobileWidth: 960,
+  mobileHeight: 1200,
+};
 
 const clientLogos: LogoAsset[] = [
   {
@@ -359,6 +378,15 @@ const copy: Record<Locale, SiteCopy> = {
         'Toteutus',
         'Luovutus ja raportointi',
       ],
+    },
+    projectFilm: {
+      eyebrow: 'PROJEKTITOIMITUS KÄYTÄNNÖSSÄ',
+      heading: 'Näin projekti etenee.',
+      copy: 'Suunnittelusta toimitukseen, asennukseen ja valmiiseen kohteeseen.',
+      playLabel: 'Katso video',
+      duration: '0:30',
+      ariaLabel: 'Katso KukaKuskaa PRO -projektifilmi',
+      centerAriaLabel: 'Toista KukaKuskaa PRO -projektifilmi',
     },
     trust: {
       kicker: 'Luottamus',
@@ -514,6 +542,15 @@ const copy: Record<Locale, SiteCopy> = {
         'Handover and reporting',
       ],
     },
+    projectFilm: {
+      eyebrow: 'PROJECT DELIVERY IN PRACTICE',
+      heading: 'See how a project comes together.',
+      copy: 'From planning to delivery, installation and a finished site.',
+      playLabel: 'Watch video',
+      duration: '0:30',
+      ariaLabel: 'Watch the KukaKuskaa PRO project film',
+      centerAriaLabel: 'Play the KukaKuskaa PRO project film',
+    },
     trust: {
       kicker: 'Trust',
       heading: 'Trust through the way we work',
@@ -647,6 +684,7 @@ function App() {
         <Services content={content} locale={locale} />
         <ProjectVisibility content={content} locale={locale} />
         <ProcessSection content={content} locale={locale} />
+        <ProjectFilmSection content={content} />
         <TrustSection content={content} locale={locale} />
         <ContactSection content={content} locale={locale} />
       </main>
@@ -911,6 +949,76 @@ function ProcessSection({ content, locale }: { content: SiteCopy; locale: Locale
             ))}
           </ol>
         </div>
+      </div>
+    </section>
+  );
+}
+
+function ProjectFilmSection({ content }: { content: SiteCopy }) {
+  const [isPlaying, setIsPlaying] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    if (!isPlaying) {
+      return;
+    }
+
+    videoRef.current?.play().catch(() => {
+      // Native controls remain visible if a browser requires a second user gesture.
+    });
+  }, [isPlaying]);
+
+  return (
+    <section className="project-film-section section-pad" aria-labelledby="project-film-title">
+      <div className="project-film-copy">
+        <p className="eyebrow">{content.projectFilm.eyebrow}</p>
+        <h2 id="project-film-title">{content.projectFilm.heading}</h2>
+        <p className="lead">{content.projectFilm.copy}</p>
+      </div>
+
+      <div className={`project-film-media${isPlaying ? ' is-playing' : ''}`}>
+        {isPlaying ? (
+          <video
+            ref={videoRef}
+            src={projectFilmMedia.video}
+            controls
+            playsInline
+            preload="metadata"
+            poster={projectFilmMedia.posterDesktop}
+          />
+        ) : (
+          <>
+            <picture>
+              <source media="(max-width: 640px)" srcSet={projectFilmMedia.posterMobile} />
+              <img
+                src={projectFilmMedia.posterDesktop}
+                width={projectFilmMedia.desktopWidth}
+                height={projectFilmMedia.desktopHeight}
+                alt=""
+                aria-hidden="true"
+                loading="lazy"
+              />
+            </picture>
+            <button
+              className="film-play-button"
+              type="button"
+              aria-label={`${content.projectFilm.ariaLabel}, ${content.projectFilm.duration}`}
+              onClick={() => setIsPlaying(true)}
+            >
+              <span className="film-play-icon" aria-hidden="true" />
+              <span className="film-play-text">{content.projectFilm.playLabel}</span>
+              <span className="film-duration">{content.projectFilm.duration}</span>
+            </button>
+            <button
+              className="film-center-play-button"
+              type="button"
+              aria-label={content.projectFilm.centerAriaLabel}
+              onClick={() => setIsPlaying(true)}
+            >
+              <span aria-hidden="true" />
+            </button>
+          </>
+        )}
       </div>
     </section>
   );
