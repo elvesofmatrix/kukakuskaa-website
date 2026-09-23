@@ -1,8 +1,18 @@
-import { FormEvent, useEffect, useMemo, useRef, useState } from 'react';
+import { FocusEvent, FormEvent, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  type AnalyticsConsentChoice,
+  getStoredConsentChoice,
+  initializeAnalytics,
+  persistConsentChoice,
+  trackEvent,
+  trackPageView,
+  updateAnalyticsConsent,
+} from './analytics';
 
 type Locale = 'fi' | 'en';
 type FormStatus = 'idle' | 'submitting' | 'success' | 'error';
 type ProjectTypeKey = 'business' | 'furniture' | 'home' | 'clearance' | 'other';
+type FilmPlayControl = 'descriptive' | 'center';
 
 type NavItem = {
   id: string;
@@ -113,6 +123,13 @@ type SiteCopy = {
   footer: {
     language: string;
     copyright: string;
+  };
+  consent: {
+    title: string;
+    copy: string;
+    necessary: string;
+    acceptAll: string;
+    settings: string;
   };
 };
 
@@ -427,6 +444,14 @@ const copy: Record<Locale, SiteCopy> = {
       language: 'Kieli',
       copyright: 'Kaikki oikeudet pidätetään.',
     },
+    consent: {
+      title: 'Evästeet',
+      copy:
+        'Käytämme välttämättömiä evästeitä sivuston toimintaan. Analytiikka auttaa ymmärtämään PRO-sivuston käyttöä ilman henkilötietojen lähettämistä.',
+      necessary: 'Vain välttämättömät',
+      acceptAll: 'Hyväksy kaikki',
+      settings: 'Evästeasetukset',
+    },
   },
   en: {
     htmlLang: 'en',
@@ -593,6 +618,14 @@ const copy: Record<Locale, SiteCopy> = {
       language: 'Language',
       copyright: 'All rights reserved.',
     },
+    consent: {
+      title: 'Cookies',
+      copy:
+        'We use necessary cookies for the site to work. Analytics helps us understand how the PRO site is used without sending personal information.',
+      necessary: 'Necessary only',
+      acceptAll: 'Accept all',
+      settings: 'Cookie settings',
+    },
   },
 };
 
@@ -610,8 +643,22 @@ function App() {
   const [locale, setLocale] = useState<Locale>(() => getLocaleFromPath());
   const [menuOpen, setMenuOpen] = useState(false);
   const [selectedProjectType, setSelectedProjectType] = useState<ProjectTypeKey | ''>('');
+  const [consentChoice, setConsentChoice] = useState<AnalyticsConsentChoice>(() => getStoredConsentChoice());
+  const [consentPanelOpen, setConsentPanelOpen] = useState(() => getStoredConsentChoice() === null);
   const content = copy[locale];
   const currentYear = new Date().getFullYear();
+
+  useEffect(() => {
+    initializeAnalytics();
+  }, []);
+
+  useEffect(() => {
+    updateAnalyticsConsent(consentChoice);
+  }, [consentChoice]);
+
+  useEffect(() => {
+    trackPageView(content.path, locale);
+  }, [content.path, locale, consentChoice]);
 
   useEffect(() => {
     const onPopState = () => setLocale(getLocaleFromPath());
@@ -670,6 +717,12 @@ function App() {
     setSelectedProjectType('');
   }
 
+  function saveConsentChoice(choice: Exclude<AnalyticsConsentChoice, null>) {
+    persistConsentChoice(choice);
+    setConsentChoice(choice);
+    setConsentPanelOpen(false);
+  }
+
   return (
     <div className="site-shell">
       <Header
@@ -680,17 +733,32 @@ function App() {
         onMenuToggle={() => setMenuOpen((open) => !open)}
         onNavigate={() => setMenuOpen(false)}
         onContactNavigate={clearContactIntent}
+        onContactCtaClick={() => {
+          trackEvent('contact_cta_click', {
+            cta_id: 'header_contact',
+            location: 'header',
+            locale,
+          });
+        }}
         onLanguageChange={switchLanguage}
       />
 
       <main>
-        <Hero content={content} onContactNavigate={clearContactIntent} />
+        <Hero
+          content={content}
+          locale={locale}
+          onContactNavigate={clearContactIntent}
+        />
         <ClientLogoStrip content={content} />
         <PositioningStrip points={content.positioning} />
-        <Services content={content} locale={locale} onContactIntent={setSelectedProjectType} />
+        <Services
+          content={content}
+          locale={locale}
+          onContactIntent={setSelectedProjectType}
+        />
         <ProjectVisibility content={content} locale={locale} />
         <ProcessSection content={content} locale={locale} />
-        <ProjectFilmSection content={content} />
+        <ProjectFilmSection content={content} locale={locale} />
         <TrustSection content={content} locale={locale} />
         <ContactSection
           content={content}
@@ -706,7 +774,15 @@ function App() {
         currentYear={currentYear}
         onContactNavigate={clearContactIntent}
         onLanguageChange={switchLanguage}
+        onConsentSettings={() => setConsentPanelOpen(true)}
       />
+      {consentPanelOpen ? (
+        <ConsentPanel
+          content={content}
+          onAcceptAll={() => saveConsentChoice('accepted')}
+          onNecessaryOnly={() => saveConsentChoice('necessary')}
+        />
+      ) : null}
     </div>
   );
 }
@@ -719,6 +795,7 @@ function Header({
   onMenuToggle,
   onNavigate,
   onContactNavigate,
+  onContactCtaClick,
   onLanguageChange,
 }: {
   content: SiteCopy;
@@ -728,6 +805,7 @@ function Header({
   onMenuToggle: () => void;
   onNavigate: () => void;
   onContactNavigate: () => void;
+  onContactCtaClick: () => void;
   onLanguageChange: (locale: Locale) => void;
 }) {
   function handleNavClick(itemId: string) {
@@ -795,6 +873,7 @@ function Header({
             className="header-cta"
             href="#contact"
             onClick={() => {
+              onContactCtaClick();
               onContactNavigate();
               onNavigate();
             }}
@@ -807,7 +886,15 @@ function Header({
   );
 }
 
-function Hero({ content, onContactNavigate }: { content: SiteCopy; onContactNavigate: () => void }) {
+function Hero({
+  content,
+  locale,
+  onContactNavigate,
+}: {
+  content: SiteCopy;
+  locale: Locale;
+  onContactNavigate: () => void;
+}) {
   return (
     <section className="hero-section" id="top" aria-labelledby="hero-title">
       <img
@@ -824,7 +911,18 @@ function Hero({ content, onContactNavigate }: { content: SiteCopy; onContactNavi
         <h1 id="hero-title">{content.hero.title}</h1>
         <p className="hero-support">{content.hero.copy}</p>
         <div className="hero-actions">
-          <a className="button button-primary" href="#contact" onClick={onContactNavigate}>
+          <a
+            className="button button-primary"
+            href="#contact"
+            onClick={() => {
+              trackEvent('contact_cta_click', {
+                cta_id: 'hero_contact',
+                location: 'hero',
+                locale,
+              });
+              onContactNavigate();
+            }}
+          >
             {content.hero.primaryCta}
           </a>
           <a className="button button-secondary" href="#services">
@@ -929,6 +1027,12 @@ function Services({
                 href="#contact"
                 onClick={() => {
                   if (service.contactIntent) {
+                    trackEvent('contact_cta_click', {
+                      cta_id: `service_${service.contactIntent}`,
+                      location: 'services',
+                      locale,
+                      project_type_key: service.contactIntent,
+                    });
                     onContactIntent(service.contactIntent);
                   }
                 }}
@@ -998,9 +1102,17 @@ function ProcessSection({ content, locale }: { content: SiteCopy; locale: Locale
   );
 }
 
-function ProjectFilmSection({ content }: { content: SiteCopy }) {
+function ProjectFilmSection({ content, locale }: { content: SiteCopy; locale: Locale }) {
   const [isPlaying, setIsPlaying] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
+
+  function startFilm(control: FilmPlayControl) {
+    trackEvent('project_film_play', {
+      locale,
+      control,
+    });
+    setIsPlaying(true);
+  }
 
   useEffect(() => {
     if (!isPlaying) {
@@ -1047,7 +1159,7 @@ function ProjectFilmSection({ content }: { content: SiteCopy }) {
               className="film-play-button"
               type="button"
               aria-label={`${content.projectFilm.ariaLabel}, ${content.projectFilm.duration}`}
-              onClick={() => setIsPlaying(true)}
+              onClick={() => startFilm('descriptive')}
             >
               <span className="film-play-icon" aria-hidden="true" />
               <span className="film-play-text">{content.projectFilm.playLabel}</span>
@@ -1057,7 +1169,7 @@ function ProjectFilmSection({ content }: { content: SiteCopy }) {
               className="film-center-play-button"
               type="button"
               aria-label={content.projectFilm.centerAriaLabel}
-              onClick={() => setIsPlaying(true)}
+              onClick={() => startFilm('center')}
             >
               <span aria-hidden="true" />
             </button>
@@ -1108,10 +1220,38 @@ function ContactSection({
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [notice, setNotice] = useState('');
   const [status, setStatus] = useState<FormStatus>('idle');
+  const formStartTrackedRef = useRef(false);
   const selectedProjectTypeLabel = selectedProjectType ? content.contact.projectTypes[selectedProjectType] : '';
 
   function resolveProjectTypeKey(value: string): ProjectTypeKey | '' {
     return projectTypeOrder.find((key) => content.contact.projectTypes[key] === value) || '';
+  }
+
+  function analyticsProjectParams(projectType: ProjectTypeKey | '') {
+    return {
+      locale,
+      project_type_key: projectType || undefined,
+    };
+  }
+
+  function trackFormStart(event: FocusEvent<HTMLFormElement>) {
+    if (formStartTrackedRef.current) {
+      return;
+    }
+
+    const target = event.target;
+    if (!(target instanceof HTMLInputElement || target instanceof HTMLSelectElement || target instanceof HTMLTextAreaElement)) {
+      return;
+    }
+
+    if (target.name === 'website') {
+      return;
+    }
+
+    const tracked = trackEvent('contact_form_start', analyticsProjectParams(selectedProjectType));
+    if (tracked) {
+      formStartTrackedRef.current = true;
+    }
   }
 
   function validate(form: HTMLFormElement) {
@@ -1167,6 +1307,7 @@ function ContactSection({
       }
 
       form.reset();
+      trackEvent('contact_submit_success', analyticsProjectParams(selectedProjectType));
       onProjectTypeChange('');
       setErrors({});
       setNotice(content.contact.validation.success);
@@ -1187,14 +1328,36 @@ function ContactSection({
           <address>
             <strong>Kimi Kuosmanen</strong>
             <span>KukaKuskaa Oy</span>
-            <a href="tel:+358440335538">044 033 5538</a>
-            <a href="mailto:myynti@kukakuskaa.com">myynti@kukakuskaa.com</a>
+            <a
+              href="tel:+358440335538"
+              onClick={() => {
+                trackEvent('contact_method_click', {
+                  method: 'phone',
+                  locale,
+                  location: 'contact_section',
+                });
+              }}
+            >
+              044 033 5538
+            </a>
+            <a
+              href="mailto:myynti@kukakuskaa.com"
+              onClick={() => {
+                trackEvent('contact_method_click', {
+                  method: 'email',
+                  locale,
+                  location: 'contact_section',
+                });
+              }}
+            >
+              myynti@kukakuskaa.com
+            </a>
             <span>www.kukakuskaa.com</span>
             <span>Eteläniementie 21, 71750 Maaninka</span>
           </address>
         </div>
 
-        <form className="contact-form" onSubmit={handleSubmit} noValidate>
+        <form className="contact-form" onSubmit={handleSubmit} onFocusCapture={trackFormStart} noValidate>
           <label className="honeypot" aria-hidden="true">
             <span>Website</span>
             <input name="website" type="text" tabIndex={-1} autoComplete="off" />
@@ -1273,12 +1436,14 @@ function Footer({
   locale,
   currentYear,
   onContactNavigate,
+  onConsentSettings,
   onLanguageChange,
 }: {
   content: SiteCopy;
   locale: Locale;
   currentYear: number;
   onContactNavigate: () => void;
+  onConsentSettings: () => void;
   onLanguageChange: (locale: Locale) => void;
 }) {
   return (
@@ -1313,8 +1478,38 @@ function Footer({
         <button type="button" onClick={() => onLanguageChange('en')} aria-current={locale === 'en' ? 'true' : undefined}>
           EN
         </button>
+        <button type="button" className="footer-consent-button" onClick={onConsentSettings}>
+          {content.consent.settings}
+        </button>
       </div>
     </footer>
+  );
+}
+
+function ConsentPanel({
+  content,
+  onAcceptAll,
+  onNecessaryOnly,
+}: {
+  content: SiteCopy;
+  onAcceptAll: () => void;
+  onNecessaryOnly: () => void;
+}) {
+  return (
+    <section className="consent-panel" aria-labelledby="consent-title">
+      <div>
+        <h2 id="consent-title">{content.consent.title}</h2>
+        <p>{content.consent.copy}</p>
+      </div>
+      <div className="consent-actions">
+        <button type="button" className="button button-secondary" onClick={onNecessaryOnly}>
+          {content.consent.necessary}
+        </button>
+        <button type="button" className="button button-primary" onClick={onAcceptAll}>
+          {content.consent.acceptAll}
+        </button>
+      </div>
+    </section>
   );
 }
 
