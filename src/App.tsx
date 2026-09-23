@@ -35,6 +35,8 @@ type ImageAsset = {
   width: number;
   height: number;
   alt: Record<Locale, string>;
+  srcSet?: string;
+  sizes?: string;
   objectPosition?: string;
 };
 
@@ -155,9 +157,11 @@ const nav: Record<Locale, NavItem[]> = {
 
 const images = {
   hero: {
-    src: '/assets/images/a_wide_high_resolution_architectural_interior_sce.webp',
+    src: '/assets/images/hero-interior-desktop.avif',
     width: 1672,
     height: 941,
+    srcSet: '/assets/images/hero-interior-mobile.avif 900w, /assets/images/hero-interior-desktop.avif 1672w',
+    sizes: '100vw',
     alt: {
       fi: 'Rauhallinen pohjoismainen toimitila, jossa vaativa kalusteprojekti on viimeistelyvaiheessa.',
       en: 'Calm Nordic commercial interior where a demanding furniture project is being completed.',
@@ -900,6 +904,8 @@ function Hero({
       <img
         className="hero-image"
         src={images.hero.src}
+        srcSet={images.hero.srcSet}
+        sizes={images.hero.sizes}
         width={images.hero.width}
         height={images.hero.height}
         alt={images.hero.alt[content.htmlLang as Locale]}
