@@ -636,7 +636,7 @@ function getLocaleFromPath(): Locale {
 }
 
 function buildUrl(path: string): string {
-  return `https://www.kukakuskaa.com${path === '/' ? '/' : path}`;
+  return `https://kukakuskaapro.com${path === '/' ? '/' : path}`;
 }
 
 function App() {
@@ -683,7 +683,7 @@ function App() {
       '@context': 'https://schema.org',
       '@type': ['Organization', 'LocalBusiness'],
       name: 'KukaKuskaa Oy',
-      url: 'https://www.kukakuskaa.com/',
+      url: 'https://kukakuskaapro.com/',
       telephone: '+358440335538',
       email: 'myynti@kukakuskaa.com',
       address: {
