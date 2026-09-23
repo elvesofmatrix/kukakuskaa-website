@@ -1,6 +1,9 @@
 export type AnalyticsConsentChoice = 'accepted' | 'necessary' | null;
 
 type GtagCommand = 'js' | 'config' | 'event' | 'consent';
+type GtagTarget = string | Date;
+type GtagParams = Record<string, unknown>;
+type GtagFunction = (command: GtagCommand, target: GtagTarget, params?: GtagParams) => void;
 type ConsentState = 'granted' | 'denied';
 type AnalyticsEventName =
   | 'page_view'
@@ -22,20 +25,23 @@ let lastPageViewKey = '';
 declare global {
   interface Window {
     dataLayer?: unknown[];
-    gtag?: (command: GtagCommand, target: string | Date, params?: Record<string, unknown>) => void;
+    gtag?: GtagFunction;
   }
 }
 
-function gtag(command: GtagCommand, target: string | Date, params?: Record<string, unknown>) {
+function bootstrapGtag() {
   window.dataLayer = window.dataLayer || [];
   window.gtag =
     window.gtag ||
-    function gtagShim() {
-      // gtag.js expects the native Arguments object here, not a copied array.
+    function gtag() {
       // eslint-disable-next-line prefer-rest-params
       window.dataLayer?.push(arguments);
     };
-  window.gtag(command, target, params);
+}
+
+function sendGtagCommand(command: GtagCommand, target: GtagTarget, params?: GtagParams) {
+  bootstrapGtag();
+  window.gtag?.(command, target, params);
 }
 
 function consentFields(state: ConsentState) {
@@ -62,7 +68,8 @@ export function initializeAnalytics() {
 
   defaultsInitialized = true;
   setGaDisabled(true);
-  gtag('consent', 'default', consentFields('denied'));
+  bootstrapGtag();
+  sendGtagCommand('consent', 'default', consentFields('denied'));
 }
 
 function loadGa() {
@@ -71,13 +78,14 @@ function loadGa() {
   }
 
   gaLoaded = true;
+  bootstrapGtag();
   const script = document.createElement('script');
   script.async = true;
   script.src = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(measurementId)}`;
   document.head.append(script);
 
-  gtag('js', new Date());
-  gtag('config', measurementId, { send_page_view: false });
+  sendGtagCommand('js', new Date());
+  sendGtagCommand('config', measurementId, { send_page_view: false });
 }
 
 export function getStoredConsentChoice(): AnalyticsConsentChoice {
@@ -95,14 +103,14 @@ export function updateAnalyticsConsent(choice: AnalyticsConsentChoice) {
   if (choice === 'accepted') {
     analyticsEnabled = true;
     setGaDisabled(false);
-    gtag('consent', 'update', consentFields('granted'));
+    sendGtagCommand('consent', 'update', consentFields('granted'));
     loadGa();
     return;
   }
 
   analyticsEnabled = false;
   setGaDisabled(true);
-  gtag('consent', 'update', consentFields('denied'));
+  sendGtagCommand('consent', 'update', consentFields('denied'));
 }
 
 export function persistConsentChoice(choice: Exclude<AnalyticsConsentChoice, null>) {
@@ -120,7 +128,7 @@ export function trackPageView(pagePath: string, pageLanguage: string) {
   }
 
   lastPageViewKey = key;
-  gtag('event', 'page_view', {
+  sendGtagCommand('event', 'page_view', {
     page_path: pagePath,
     page_language: pageLanguage,
   });
@@ -136,6 +144,6 @@ export function trackEvent(eventName: AnalyticsEventName, params: AnalyticsParam
     Object.entries(params).filter((entry): entry is [string, string] => typeof entry[1] === 'string'),
   );
 
-  gtag('event', eventName, safeParams);
+  sendGtagCommand('event', eventName, safeParams);
   return true;
 }
