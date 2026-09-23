@@ -168,9 +168,12 @@ const images = {
     },
   },
   business: {
-    src: '/assets/images/business-relocation-care-bed-installation.webp',
+    src: '/assets/images/business-relocation-care-bed-installation-desktop.avif',
     width: 1806,
-    height: 871,
+    height: 872,
+    srcSet:
+      '/assets/images/business-relocation-care-bed-installation-mobile.avif 900w, /assets/images/business-relocation-care-bed-installation-desktop.avif 1806w',
+    sizes: '(max-width: 900px) calc(100vw - 32px), 650px',
     objectPosition: '58% 50%',
     alt: {
       fi: 'KukaKuskaa-asentajat asentamassa hoivasänkyä',
@@ -196,9 +199,11 @@ const images = {
     },
   },
   clearance: {
-    src: '/assets/images/service-estate-clearance.webp',
+    src: '/assets/images/service-estate-clearance-desktop.avif',
     width: 1536,
     height: 1024,
+    srcSet: '/assets/images/service-estate-clearance-mobile.avif 900w, /assets/images/service-estate-clearance-desktop.avif 1536w',
+    sizes: '(max-width: 900px) calc(100vw - 32px), 650px',
     alt: {
       fi: 'Kodin tyhjennysprojekti etenee rauhallisesti ja järjestelmällisesti.',
       en: 'Home clearance project progressing calmly and systematically.',
@@ -214,9 +219,11 @@ const images = {
     },
   },
   process: {
-    src: '/assets/images/process-planning.webp',
+    src: '/assets/images/process-planning-desktop.avif',
     width: 1536,
     height: 1024,
+    srcSet: '/assets/images/process-planning-mobile.avif 900w, /assets/images/process-planning-desktop.avif 1536w',
+    sizes: '(max-width: 900px) calc(100vw - 32px), 650px',
     alt: {
       fi: 'Työryhmä käy läpi suunnitelmaa ennen vaativan projektin toteutusta.',
       en: 'Team reviewing a plan before delivering a demanding practical project.',
@@ -1005,6 +1012,8 @@ function Services({
                 src={service.image.src}
                 width={service.image.width}
                 height={service.image.height}
+                srcSet={service.image.srcSet}
+                sizes={service.image.sizes}
                 alt={service.image.alt[locale]}
                 loading="lazy"
                 style={service.image.objectPosition ? { objectPosition: service.image.objectPosition } : undefined}
@@ -1090,6 +1099,8 @@ function ProcessSection({ content, locale }: { content: SiteCopy; locale: Locale
           src={images.process.src}
           width={images.process.width}
           height={images.process.height}
+          srcSet={images.process.srcSet}
+          sizes={images.process.sizes}
           alt={images.process.alt[locale]}
           loading="lazy"
         />
