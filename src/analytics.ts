@@ -1,9 +1,10 @@
 export type AnalyticsConsentChoice = 'accepted' | 'necessary' | null;
 
 type GtagCommand = 'js' | 'config' | 'event' | 'consent';
+type GtagConsentAction = 'default' | 'update';
 type GtagTarget = string | Date;
 type GtagParams = Record<string, unknown>;
-type GtagFunction = (command: GtagCommand, target: GtagTarget, params?: GtagParams) => void;
+type GtagFunction = (command: GtagCommand, target: GtagTarget | GtagConsentAction, params?: GtagParams) => void;
 type ConsentState = 'granted' | 'denied';
 type AnalyticsEventName =
   | 'page_view'
@@ -15,10 +16,8 @@ type AnalyticsEventName =
 type AnalyticsParams = Record<string, string | undefined>;
 
 const CONSENT_STORAGE_KEY = 'kukakuskaa_pro_cookie_consent';
-const measurementId = import.meta.env.VITE_GA_MEASUREMENT_ID;
 
 let defaultsInitialized = false;
-let gaLoaded = false;
 let analyticsEnabled = false;
 let lastPageViewKey = '';
 
@@ -29,18 +28,7 @@ declare global {
   }
 }
 
-function bootstrapGtag() {
-  window.dataLayer = window.dataLayer || [];
-  window.gtag =
-    window.gtag ||
-    function gtag() {
-      // eslint-disable-next-line prefer-rest-params
-      window.dataLayer?.push(arguments);
-    };
-}
-
-function sendGtagCommand(command: GtagCommand, target: GtagTarget, params?: GtagParams) {
-  bootstrapGtag();
+function sendGtagCommand(command: GtagCommand, target: GtagTarget | GtagConsentAction, params?: GtagParams) {
   window.gtag?.(command, target, params);
 }
 
@@ -53,39 +41,12 @@ function consentFields(state: ConsentState) {
   };
 }
 
-function setGaDisabled(disabled: boolean) {
-  if (!measurementId) {
-    return;
-  }
-
-  ((window as unknown) as Record<string, boolean>)[`ga-disable-${measurementId}`] = disabled;
-}
-
 export function initializeAnalytics() {
   if (defaultsInitialized) {
     return;
   }
 
   defaultsInitialized = true;
-  setGaDisabled(true);
-  bootstrapGtag();
-  sendGtagCommand('consent', 'default', consentFields('denied'));
-}
-
-function loadGa() {
-  if (!measurementId || gaLoaded) {
-    return;
-  }
-
-  gaLoaded = true;
-  bootstrapGtag();
-  const script = document.createElement('script');
-  script.async = true;
-  script.src = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(measurementId)}`;
-  document.head.append(script);
-
-  sendGtagCommand('js', new Date());
-  sendGtagCommand('config', measurementId, { send_page_view: false });
 }
 
 export function getStoredConsentChoice(): AnalyticsConsentChoice {
@@ -102,14 +63,11 @@ export function updateAnalyticsConsent(choice: AnalyticsConsentChoice) {
 
   if (choice === 'accepted') {
     analyticsEnabled = true;
-    setGaDisabled(false);
     sendGtagCommand('consent', 'update', consentFields('granted'));
-    loadGa();
     return;
   }
 
   analyticsEnabled = false;
-  setGaDisabled(true);
   sendGtagCommand('consent', 'update', consentFields('denied'));
 }
 
@@ -118,7 +76,7 @@ export function persistConsentChoice(choice: Exclude<AnalyticsConsentChoice, nul
 }
 
 export function canSendAnalytics() {
-  return analyticsEnabled && Boolean(measurementId);
+  return analyticsEnabled;
 }
 
 export function trackPageView(pagePath: string, pageLanguage: string) {
