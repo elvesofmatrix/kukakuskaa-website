@@ -30,8 +30,10 @@ function gtag(command: GtagCommand, target: string | Date, params?: Record<strin
   window.dataLayer = window.dataLayer || [];
   window.gtag =
     window.gtag ||
-    function gtagShim(...args: unknown[]) {
-      window.dataLayer?.push(args);
+    function gtagShim() {
+      // gtag.js expects the native Arguments object here, not a copied array.
+      // eslint-disable-next-line prefer-rest-params
+      window.dataLayer?.push(arguments);
     };
   window.gtag(command, target, params);
 }
