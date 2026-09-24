@@ -160,7 +160,8 @@ const images = {
     src: '/assets/images/hero-interior-desktop.avif',
     width: 1672,
     height: 941,
-    srcSet: '/assets/images/hero-interior-mobile.avif 900w, /assets/images/hero-interior-desktop.avif 1672w',
+    srcSet:
+      '/assets/images/hero-interior-mobile.avif 900w, /assets/images/hero-interior-tablet.avif 1280w, /assets/images/hero-interior-desktop.avif 1672w',
     sizes: '100vw',
     alt: {
       fi: 'Rauhallinen pohjoismainen toimitila, jossa vaativa kalusteprojekti on viimeistelyvaiheessa.',
@@ -172,7 +173,7 @@ const images = {
     width: 1806,
     height: 872,
     srcSet:
-      '/assets/images/business-relocation-care-bed-installation-mobile.avif 900w, /assets/images/business-relocation-care-bed-installation-desktop.avif 1806w',
+      '/assets/images/business-relocation-care-bed-installation-mobile.avif 900w, /assets/images/business-relocation-care-bed-installation-tablet.avif 1200w, /assets/images/business-relocation-care-bed-installation-desktop.avif 1806w',
     sizes: '(max-width: 900px) calc(100vw - 32px), 650px',
     objectPosition: '58% 50%',
     alt: {
@@ -181,18 +182,24 @@ const images = {
     },
   },
   furniture: {
-    src: '/assets/images/service-furniture-logistics.webp',
+    src: '/assets/images/service-furniture-logistics-desktop.avif',
     width: 1536,
     height: 1024,
+    srcSet:
+      '/assets/images/service-furniture-logistics-mobile.avif 900w, /assets/images/service-furniture-logistics-tablet.avif 1200w, /assets/images/service-furniture-logistics-desktop.avif 1536w',
+    sizes: '(max-width: 900px) calc(100vw - 32px), 650px',
     alt: {
       fi: 'Kalustetoimituksen tavarat odottavat hallitusti toimistokäytävällä.',
       en: 'Furniture delivery items staged carefully in an office corridor.',
     },
   },
   home: {
-    src: '/assets/images/service-premium-home-relocation.webp',
+    src: '/assets/images/service-premium-home-relocation-desktop.avif',
     width: 1535,
     height: 1024,
+    srcSet:
+      '/assets/images/service-premium-home-relocation-mobile.avif 900w, /assets/images/service-premium-home-relocation-tablet.avif 1200w, /assets/images/service-premium-home-relocation-desktop.avif 1535w',
+    sizes: '(max-width: 900px) calc(100vw - 32px), 650px',
     alt: {
       fi: 'Laadukas koti, jossa suojatut kalusteet ja harkittu työskentely tukevat premium-muuttoa.',
       en: 'High-quality home with protected furniture and careful work supporting a premium relocation.',
@@ -202,7 +209,8 @@ const images = {
     src: '/assets/images/service-estate-clearance-desktop.avif',
     width: 1536,
     height: 1024,
-    srcSet: '/assets/images/service-estate-clearance-mobile.avif 900w, /assets/images/service-estate-clearance-desktop.avif 1536w',
+    srcSet:
+      '/assets/images/service-estate-clearance-mobile.avif 900w, /assets/images/service-estate-clearance-tablet.avif 1200w, /assets/images/service-estate-clearance-desktop.avif 1536w',
     sizes: '(max-width: 900px) calc(100vw - 32px), 650px',
     alt: {
       fi: 'Kodin tyhjennysprojekti etenee rauhallisesti ja järjestelmällisesti.',
@@ -222,7 +230,7 @@ const images = {
     src: '/assets/images/process-planning-desktop.avif',
     width: 1536,
     height: 1024,
-    srcSet: '/assets/images/process-planning-mobile.avif 900w, /assets/images/process-planning-desktop.avif 1536w',
+    srcSet: '/assets/images/process-planning-mobile.avif 900w, /assets/images/process-planning-tablet.avif 1200w, /assets/images/process-planning-desktop.avif 1536w',
     sizes: '(max-width: 900px) calc(100vw - 32px), 650px',
     alt: {
       fi: 'Työryhmä käy läpi suunnitelmaa ennen vaativan projektin toteutusta.',
