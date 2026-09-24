@@ -387,7 +387,7 @@ const copy: Record<Locale, SiteCopy> = {
     },
     visibility: {
       kicker: 'Projektin näkyvyys',
-      heading: 'Projektin eteneminen ei jää arvailun varaan',
+      heading: 'Projektitoimitus, joka pysyy näkyvänä',
       copy:
         'Vaativassa käytännön projektissa asiakkaan pitää ymmärtää, missä mennään. KukaKuskaa voi tehdä tavaravirran, työvaiheet ja valmistumisen näkyväksi projektikohtaisella raportoinnilla ja selkeällä yhteydenpidolla.',
       points: [
@@ -399,8 +399,8 @@ const copy: Record<Locale, SiteCopy> = {
         'Emme lupaa automaattista reaaliaikaista seurantaa jokaiseen projektiin. Näkyvyys määritellään aina projektin tarpeen ja sovitun toimintamallin mukaan.',
     },
     process: {
-      kicker: 'Näin etenemme',
-      heading: 'Näin etenemme projektisi kanssa',
+      kicker: 'Toimintamallimme',
+      heading: 'Näin viemme projektisi läpi',
       intro:
         'Hyvä toteutus alkaa rauhallisesta kartoituksesta ja päättyy siihen, että kokonaisuus on käytännössä valmis.',
       steps: [
@@ -413,7 +413,7 @@ const copy: Record<Locale, SiteCopy> = {
     },
     projectFilm: {
       eyebrow: 'PROJEKTITOIMITUS KÄYTÄNNÖSSÄ',
-      heading: 'Näin projekti etenee.',
+      heading: 'Katso, kuinka kokonaisuus syntyy.',
       copy: 'Suunnittelusta toimitukseen, asennukseen ja valmiiseen kohteeseen.',
       playLabel: 'Katso video',
       duration: '0:30',
