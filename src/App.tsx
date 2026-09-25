@@ -725,9 +725,6 @@ const dataCenterPage = {
   clarificationHeading: 'Construction and fit-out logistics, not technical installation',
   clarification:
     'The focus is physical project logistics for equipment such as server racks, cabinets, electrical equipment, UPS equipment, switchgear, cooling equipment, packaged technical equipment and project materials. KukaKuskaa PRO does not claim electrical installation, MEP installation, server configuration, networking, commissioning or data center operations.',
-  ctaHeading: 'Discuss your data center project',
-  ctaCopy:
-    'Tell us the project location, schedule, equipment volumes and required logistics scope.',
   ctaLabel: 'Discuss your data center project',
 };
 
@@ -1539,16 +1536,6 @@ function DataCenterLogisticsPage({ onContactIntent }: { onContactIntent: (intent
         </div>
       </section>
 
-      <section className="data-center-cta section-pad" aria-labelledby="data-center-cta-title">
-        <div>
-          <p className="eyebrow">Start the discussion</p>
-          <h2 id="data-center-cta-title">{dataCenterPage.ctaHeading}</h2>
-          <p className="lead">{dataCenterPage.ctaCopy}</p>
-        </div>
-        <a className="button button-primary" href="#contact" onClick={handleDataCenterCta}>
-          {dataCenterPage.ctaLabel}
-        </a>
-      </section>
     </>
   );
 }
