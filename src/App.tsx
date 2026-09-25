@@ -11,12 +11,15 @@ import {
 
 type Locale = 'fi' | 'en';
 type FormStatus = 'idle' | 'submitting' | 'success' | 'error';
-type ProjectTypeKey = 'business' | 'furniture' | 'home' | 'clearance' | 'other';
+type PageKey = 'home' | 'dataCenter';
+type CoreProjectTypeKey = 'business' | 'furniture' | 'home' | 'clearance' | 'other';
+type ProjectTypeKey = CoreProjectTypeKey | 'dataCenter';
 type FilmPlayControl = 'descriptive' | 'center';
 
 type NavItem = {
   id: string;
   label: string;
+  path?: string;
 };
 
 type Service = {
@@ -46,6 +49,8 @@ type LogoAsset = {
   height: number;
   alt: Record<Locale, string>;
 };
+
+type ContactProjectTypes = Record<CoreProjectTypeKey, string> & Partial<Record<ProjectTypeKey, string>>;
 
 type SiteCopy = {
   htmlLang: string;
@@ -113,7 +118,7 @@ type SiteCopy = {
       description: string;
       submit: string;
     };
-    projectTypes: Record<ProjectTypeKey, string>;
+    projectTypes: ContactProjectTypes;
     validation: {
       required: string;
       email: string;
@@ -135,6 +140,11 @@ type SiteCopy = {
   };
 };
 
+type ProjectFilmCopy = SiteCopy['projectFilm'];
+
+const dataCenterRoute = '/en/data-center-logistics-finland/';
+const englishHomeRoute = '/en/';
+
 const routes: Record<Locale, string> = {
   fi: '/',
   en: '/en',
@@ -149,6 +159,7 @@ const nav: Record<Locale, NavItem[]> = {
   ],
   en: [
     { id: 'services', label: 'Services' },
+    { id: 'data-center-logistics', label: 'Data Center Logistics', path: dataCenterRoute },
     { id: 'visibility', label: 'Project visibility' },
     { id: 'process', label: 'How we work' },
     { id: 'contact', label: 'Contact' },
@@ -244,6 +255,18 @@ const images = {
     alt: {
       fi: 'KukaKuskaa PRO -tiimi toteuttamassa toimitusta asiakkaan toimitiloissa',
       en: 'KukaKuskaa PRO team carrying out a project delivery at a customer site',
+    },
+  },
+  dataCenter: {
+    src: '/assets/images/data-center-logistics-finland-desktop.avif',
+    width: 800,
+    height: 540,
+    srcSet:
+      '/assets/images/data-center-logistics-finland-mobile.avif 560w, /assets/images/data-center-logistics-finland-desktop.avif 800w',
+    sizes: '(max-width: 900px) calc(100vw - 32px), 650px',
+    alt: {
+      fi: '',
+      en: 'KukaKuskaa PRO crew handling protected data center equipment in a logistics staging area',
     },
   },
 } satisfies Record<string, ImageAsset>;
@@ -623,6 +646,7 @@ const copy: Record<Locale, SiteCopy> = {
         furniture: 'Furniture delivery',
         home: 'Home relocation',
         clearance: 'Clearance project',
+        dataCenter: 'Data Center Logistics',
         other: 'Other demanding project',
       },
       validation: {
@@ -648,10 +672,85 @@ const copy: Record<Locale, SiteCopy> = {
   },
 };
 
-const projectTypeOrder: ProjectTypeKey[] = ['business', 'furniture', 'home', 'clearance', 'other'];
+const dataCenterPage = {
+  path: dataCenterRoute,
+  title: 'Data Center Logistics Finland | KukaKuskaa PRO',
+  description:
+    'Local logistics support for data center construction projects in Finland. Site logistics, staging, scheduled deliveries, material handling and equipment positioning.',
+  eyebrow: 'DATA CENTER LOGISTICS · FINLAND',
+  heading: 'Data Center Logistics in Finland',
+  lead: 'Local logistics support for data center construction projects.',
+  intro: [
+    'KukaKuskaa PRO supports international contractors, equipment suppliers and project teams with local logistics execution in Finland.',
+    'We coordinate the physical flow of equipment and materials from receiving and staging to scheduled site delivery, internal movement and final positioning.',
+  ],
+  highlights: [
+    'Local execution for construction and fit-out logistics.',
+    'Controlled material flow from arrival to designated location.',
+    'Project visibility through practical coordination and reporting.',
+  ],
+  servicesHeading: 'Five practical logistics responsibilities',
+  services: [
+    {
+      title: 'Site logistics',
+      copy:
+        'Physical logistics support during data center construction and fit-out, including incoming material coordination, site deliveries and movement between staging areas and work areas.',
+    },
+    {
+      title: 'Receiving & staging',
+      copy:
+        'Receiving equipment and materials, arranging temporary staging or short-term buffer storage where applicable, and preparing material flows for scheduled delivery.',
+    },
+    {
+      title: 'Scheduled & final-mile delivery',
+      copy:
+        'Delivery-window coordination, final-mile transport and sequencing so the correct equipment reaches the correct location at the agreed time.',
+    },
+    {
+      title: 'Internal logistics & material handling',
+      copy:
+        'Internal movement on the project site, practical material handling and distribution toward designated work areas with attention to access and movement routes.',
+    },
+    {
+      title: 'Equipment handling & positioning',
+      copy:
+        'Careful inside delivery, movement through the facility and physical positioning at the designated installation location, including packaging removal where applicable.',
+    },
+  ],
+  partnerEyebrow: 'LOCAL EXECUTION PARTNER IN FINLAND',
+  partnerHeading: 'Local hands on the ground in Finland',
+  partnerCopy:
+    'International projects need local execution. KukaKuskaa PRO provides people, transport and practical logistics coordination to move equipment from arrival to its designated location on site.',
+  process: ['Receive', 'Stage', 'Schedule', 'Deliver', 'Position', 'Report'],
+  clarificationHeading: 'Construction and fit-out logistics, not technical installation',
+  clarification:
+    'The focus is physical project logistics for equipment such as server racks, cabinets, electrical equipment, UPS equipment, switchgear, cooling equipment, packaged technical equipment and project materials. KukaKuskaa PRO does not claim electrical installation, MEP installation, server configuration, networking, commissioning or data center operations.',
+  ctaHeading: 'Discuss your data center project',
+  ctaCopy:
+    'Tell us the project location, schedule, equipment volumes and required logistics scope.',
+  ctaLabel: 'Discuss your data center project',
+};
+
+const dataCenterFilm: ProjectFilmCopy = {
+  eyebrow: 'HOW WE WORK',
+  heading: 'See how we deliver projects',
+  copy:
+    'Planning, logistics, installation support and project visibility — coordinated as one practical delivery.',
+  playLabel: 'Watch video',
+  duration: '0:30',
+  ariaLabel: 'Watch the KukaKuskaa PRO project film',
+  centerAriaLabel: 'Play the KukaKuskaa PRO project film',
+};
+
+const projectTypeOrder: ProjectTypeKey[] = ['business', 'furniture', 'home', 'clearance', 'dataCenter', 'other'];
 
 function getLocaleFromPath(): Locale {
   return window.location.pathname.startsWith('/en') ? 'en' : 'fi';
+}
+
+function getPageFromPath(): PageKey {
+  const normalizedPath = window.location.pathname.replace(/\/$/, '');
+  return normalizedPath === dataCenterRoute.replace(/\/$/, '') ? 'dataCenter' : 'home';
 }
 
 function buildUrl(path: string): string {
@@ -660,11 +759,16 @@ function buildUrl(path: string): string {
 
 function App() {
   const [locale, setLocale] = useState<Locale>(() => getLocaleFromPath());
+  const [page, setPage] = useState<PageKey>(() => getPageFromPath());
   const [menuOpen, setMenuOpen] = useState(false);
   const [selectedProjectType, setSelectedProjectType] = useState<ProjectTypeKey | ''>('');
   const [consentChoice, setConsentChoice] = useState<AnalyticsConsentChoice>(() => getStoredConsentChoice());
   const [consentPanelOpen, setConsentPanelOpen] = useState(() => getStoredConsentChoice() === null);
   const content = copy[locale];
+  const isDataCenterPage = page === 'dataCenter';
+  const pagePath = isDataCenterPage ? dataCenterPage.path : content.path;
+  const pageTitle = isDataCenterPage ? dataCenterPage.title : content.title;
+  const pageDescription = isDataCenterPage ? dataCenterPage.description : content.description;
   const currentYear = new Date().getFullYear();
 
   useEffect(() => {
@@ -676,26 +780,35 @@ function App() {
   }, [consentChoice]);
 
   useEffect(() => {
-    trackPageView(content.path, locale);
-  }, [content.path, locale, consentChoice]);
+    trackPageView(pagePath, locale);
+  }, [pagePath, locale, consentChoice]);
 
   useEffect(() => {
-    const onPopState = () => setLocale(getLocaleFromPath());
+    const onPopState = () => {
+      setLocale(getLocaleFromPath());
+      setPage(getPageFromPath());
+    };
     window.addEventListener('popstate', onPopState);
     return () => window.removeEventListener('popstate', onPopState);
   }, []);
 
   useEffect(() => {
     document.documentElement.lang = content.htmlLang;
-    document.title = content.title;
+    document.title = pageTitle;
 
     const description = ensureMeta('description');
-    description.setAttribute('content', content.description);
+    description.setAttribute('content', pageDescription);
 
-    ensureLink('canonical').setAttribute('href', buildUrl(content.path));
-    ensureAlternate('fi').setAttribute('href', buildUrl(routes.fi));
-    ensureAlternate('en').setAttribute('href', buildUrl(routes.en));
-    ensureAlternate('x-default').setAttribute('href', buildUrl(routes.fi));
+    ensureLink('canonical').setAttribute('href', buildUrl(pagePath));
+    if (isDataCenterPage) {
+      removeAlternate('fi');
+      ensureAlternate('en').setAttribute('href', buildUrl(dataCenterPage.path));
+      ensureAlternate('x-default').setAttribute('href', buildUrl(dataCenterPage.path));
+    } else {
+      ensureAlternate('fi').setAttribute('href', buildUrl(routes.fi));
+      ensureAlternate('en').setAttribute('href', buildUrl(routes.en));
+      ensureAlternate('x-default').setAttribute('href', buildUrl(routes.fi));
+    }
 
     const schema = ensureSchema();
     schema.textContent = JSON.stringify({
@@ -717,19 +830,28 @@ function App() {
         name: 'Finland',
       },
     });
-  }, [content]);
+  }, [content, isDataCenterPage, pageDescription, pagePath, pageTitle]);
 
   const alternateHref = useMemo(() => {
     const hash = window.location.hash || '';
-    return `${content.otherPath}${hash}`;
-  }, [content.otherPath]);
+    return isDataCenterPage ? dataCenterPage.path : `${content.otherPath}${hash}`;
+  }, [content.otherPath, isDataCenterPage]);
 
   function switchLanguage(nextLocale: Locale) {
-    const targetPath = routes[nextLocale];
+    const targetPath = isDataCenterPage && nextLocale === 'en' ? dataCenterPage.path : routes[nextLocale];
     const hash = window.location.hash;
     window.history.pushState({}, '', `${targetPath}${hash}`);
     setLocale(nextLocale);
+    setPage(getPageFromPath());
     setMenuOpen(false);
+  }
+
+  function navigateToPath(path: string) {
+    window.history.pushState({}, '', path);
+    setLocale(getLocaleFromPath());
+    setPage(getPageFromPath());
+    setMenuOpen(false);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   function clearContactIntent() {
@@ -760,25 +882,33 @@ function App() {
           });
         }}
         onLanguageChange={switchLanguage}
+        onRouteNavigate={navigateToPath}
+        homeHref={isDataCenterPage ? englishHomeRoute : '#top'}
       />
 
       <main>
-        <Hero
-          content={content}
-          locale={locale}
-          onContactNavigate={clearContactIntent}
-        />
-        <ClientLogoStrip content={content} />
-        <PositioningStrip points={content.positioning} />
-        <Services
-          content={content}
-          locale={locale}
-          onContactIntent={setSelectedProjectType}
-        />
-        <ProjectVisibility content={content} locale={locale} />
-        <ProcessSection content={content} locale={locale} />
-        <ProjectFilmSection content={content} locale={locale} />
-        <TrustSection content={content} locale={locale} />
+        {isDataCenterPage ? (
+          <DataCenterLogisticsPage onContactIntent={setSelectedProjectType} />
+        ) : (
+          <>
+            <Hero
+              content={content}
+              locale={locale}
+              onContactNavigate={clearContactIntent}
+            />
+            <ClientLogoStrip content={content} />
+            <PositioningStrip points={content.positioning} />
+            <Services
+              content={content}
+              locale={locale}
+              onContactIntent={setSelectedProjectType}
+            />
+            <ProjectVisibility content={content} locale={locale} />
+            <ProcessSection content={content} locale={locale} />
+            <ProjectFilmSection content={content} locale={locale} />
+            <TrustSection content={content} locale={locale} />
+          </>
+        )}
         <ContactSection
           content={content}
           locale={locale}
@@ -793,6 +923,7 @@ function App() {
         currentYear={currentYear}
         onContactNavigate={clearContactIntent}
         onLanguageChange={switchLanguage}
+        onRouteNavigate={navigateToPath}
         onConsentSettings={() => setConsentPanelOpen(true)}
       />
       {consentPanelOpen ? (
@@ -816,6 +947,8 @@ function Header({
   onContactNavigate,
   onContactCtaClick,
   onLanguageChange,
+  onRouteNavigate,
+  homeHref,
 }: {
   content: SiteCopy;
   locale: Locale;
@@ -826,6 +959,8 @@ function Header({
   onContactNavigate: () => void;
   onContactCtaClick: () => void;
   onLanguageChange: (locale: Locale) => void;
+  onRouteNavigate: (path: string) => void;
+  homeHref: string;
 }) {
   function handleNavClick(itemId: string) {
     if (itemId === 'contact') {
@@ -836,7 +971,19 @@ function Header({
 
   return (
     <header className="site-header">
-      <a className="brand" href="#top" onClick={onNavigate} aria-label="KukaKuskaa Oy">
+      <a
+        className="brand"
+        href={homeHref}
+        onClick={(event) => {
+          if (homeHref !== '#top') {
+            event.preventDefault();
+            onRouteNavigate(homeHref);
+            return;
+          }
+          onNavigate();
+        }}
+        aria-label={locale === 'fi' ? 'KukaKuskaa PRO etusivu' : 'KukaKuskaa PRO home'}
+      >
         <img
           src="/assets/brand/kukakuskaapro-logo-black.png"
           width={1207}
@@ -860,7 +1007,18 @@ function Header({
       <div className={`header-panel${menuOpen ? ' is-open' : ''}`} id="site-navigation">
         <nav className="site-nav" aria-label={content.navLabel}>
           {content.nav.map((item) => (
-            <a key={item.id} href={`#${item.id}`} onClick={() => handleNavClick(item.id)}>
+            <a
+              key={item.id}
+              href={item.path || `#${item.id}`}
+              onClick={(event) => {
+                if (item.path) {
+                  event.preventDefault();
+                  onRouteNavigate(item.path);
+                  return;
+                }
+                handleNavClick(item.id);
+              }}
+            >
               {item.label}
             </a>
           ))}
@@ -1127,9 +1285,20 @@ function ProcessSection({ content, locale }: { content: SiteCopy; locale: Locale
   );
 }
 
-function ProjectFilmSection({ content, locale }: { content: SiteCopy; locale: Locale }) {
+function ProjectFilmSection({
+  content,
+  locale,
+  filmContent,
+  processSteps,
+}: {
+  content: SiteCopy;
+  locale: Locale;
+  filmContent?: ProjectFilmCopy;
+  processSteps?: string[];
+}) {
   const [isPlaying, setIsPlaying] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const film = filmContent || content.projectFilm;
 
   function startFilm(control: FilmPlayControl) {
     trackEvent('project_film_play', {
@@ -1150,12 +1319,22 @@ function ProjectFilmSection({ content, locale }: { content: SiteCopy; locale: Lo
   }, [isPlaying]);
 
   return (
-    <section className="project-film-section section-pad" aria-labelledby="project-film-title">
+    <section
+      className={`project-film-section section-pad${processSteps ? ' data-center-film-section' : ''}`}
+      aria-labelledby="project-film-title"
+    >
       <div className="project-film-copy">
-        <p className="eyebrow">{content.projectFilm.eyebrow}</p>
-        <h2 id="project-film-title">{content.projectFilm.heading}</h2>
-        <p className="lead">{content.projectFilm.copy}</p>
+        <p className="eyebrow">{film.eyebrow}</p>
+        <h2 id="project-film-title">{film.heading}</h2>
+        <p className="lead">{film.copy}</p>
       </div>
+      {processSteps ? (
+        <div className="data-center-process" aria-label="Physical logistics flow">
+          {processSteps.map((step) => (
+            <span key={step}>{step}</span>
+          ))}
+        </div>
+      ) : null}
 
       <div className={`project-film-media${isPlaying ? ' is-playing' : ''}`}>
         {isPlaying ? (
@@ -1170,7 +1349,7 @@ function ProjectFilmSection({ content, locale }: { content: SiteCopy; locale: Lo
         ) : (
           <>
             <picture>
-              <source media="(max-width: 640px)" srcSet={projectFilmMedia.posterMobile} />
+              {processSteps ? null : <source media="(max-width: 640px)" srcSet={projectFilmMedia.posterMobile} />}
               <img
                 src={projectFilmMedia.posterDesktop}
                 width={projectFilmMedia.desktopWidth}
@@ -1183,17 +1362,17 @@ function ProjectFilmSection({ content, locale }: { content: SiteCopy; locale: Lo
             <button
               className="film-play-button"
               type="button"
-              aria-label={`${content.projectFilm.ariaLabel}, ${content.projectFilm.duration}`}
+              aria-label={`${film.ariaLabel}, ${film.duration}`}
               onClick={() => startFilm('descriptive')}
             >
               <span className="film-play-icon" aria-hidden="true" />
-              <span className="film-play-text">{content.projectFilm.playLabel}</span>
-              <span className="film-duration">{content.projectFilm.duration}</span>
+              <span className="film-play-text">{film.playLabel}</span>
+              <span className="film-duration">{film.duration}</span>
             </button>
             <button
               className="film-center-play-button"
               type="button"
-              aria-label={content.projectFilm.centerAriaLabel}
+              aria-label={film.centerAriaLabel}
               onClick={() => startFilm('center')}
             >
               <span aria-hidden="true" />
@@ -1231,6 +1410,124 @@ function TrustSection({ content, locale }: { content: SiteCopy; locale: Locale }
   );
 }
 
+function DataCenterLogisticsPage({ onContactIntent }: { onContactIntent: (intent: ProjectTypeKey) => void }) {
+  function handleDataCenterCta() {
+    trackEvent('contact_cta_click', {
+      cta_id: 'data_center_logistics_contact',
+      location: 'data_center_logistics_page',
+      locale: 'en',
+      project_type_key: 'dataCenter',
+    });
+    onContactIntent('dataCenter');
+  }
+
+  return (
+    <>
+      <section className="data-center-hero section-pad" id="top" aria-labelledby="data-center-title">
+        <div className="split-layout">
+          <div>
+            <p className="eyebrow">{dataCenterPage.eyebrow}</p>
+            <h1 id="data-center-title">{dataCenterPage.heading}</h1>
+            <p className="lead">{dataCenterPage.lead}</p>
+            {dataCenterPage.intro.map((paragraph) => (
+              <p key={paragraph}>{paragraph}</p>
+            ))}
+            <div className="hero-actions">
+              <a className="button button-primary" href="#contact" onClick={handleDataCenterCta}>
+                {dataCenterPage.ctaLabel}
+              </a>
+              <a className="button button-secondary" href="#data-center-services">
+                View service areas
+              </a>
+            </div>
+          </div>
+          <picture className="data-center-media">
+            <source media="(max-width: 640px)" srcSet="/assets/images/data-center-logistics-finland-mobile.avif" />
+            <img
+              className="data-center-image"
+              src={images.dataCenter.src}
+              srcSet="/assets/images/data-center-logistics-finland-desktop.avif 800w"
+              sizes={images.dataCenter.sizes}
+              width={images.dataCenter.width}
+              height={images.dataCenter.height}
+              alt={images.dataCenter.alt.en}
+            />
+          </picture>
+        </div>
+      </section>
+
+      <section className="data-center-services section-pad" id="data-center-services" aria-labelledby="data-center-services-title">
+        <div className="section-heading">
+          <p className="eyebrow">Construction-phase project logistics</p>
+          <h2 id="data-center-services-title">{dataCenterPage.servicesHeading}</h2>
+          <p>
+            KukaKuskaa PRO focuses on the physical flow around the project: receive, stage, schedule, deliver, move internally, position and report.
+          </p>
+        </div>
+        <div className="data-center-card-grid">
+          {dataCenterPage.services.map((service, index) => (
+            <article className="data-center-card" key={service.title}>
+              <div className="data-center-card-marker" aria-hidden="true">
+                <span className="service-number">{String(index + 1).padStart(2, '0')}</span>
+                <span className="data-center-card-line" />
+              </div>
+              <h3>{service.title}</h3>
+              <p>{service.copy}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <ProjectFilmSection
+        content={copy.en}
+        locale="en"
+        filmContent={dataCenterFilm}
+        processSteps={dataCenterPage.process}
+      />
+
+      <section className="visibility-section data-center-partner section-pad" aria-labelledby="data-center-partner-title">
+        <div className="section-heading">
+          <p className="eyebrow">{dataCenterPage.partnerEyebrow}</p>
+          <h2 id="data-center-partner-title">{dataCenterPage.partnerHeading}</h2>
+          <p className="lead">{dataCenterPage.partnerCopy}</p>
+          <ul className="refined-list">
+            {dataCenterPage.highlights.map((highlight) => (
+              <li key={highlight}>{highlight}</li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      <section className="trust-section section-pad" aria-labelledby="data-center-scope-title">
+        <div className="trust-panel">
+          <div>
+            <p className="eyebrow">Scope clarity</p>
+            <h2 id="data-center-scope-title">{dataCenterPage.clarificationHeading}</h2>
+            <p className="lead">{dataCenterPage.clarification}</p>
+          </div>
+          <div className="careful-note">
+            <strong>Physical positioning for the installation team.</strong>
+            <span>
+              Not electrical connection, MEP installation, commissioning, IT configuration or live data center operations.
+            </span>
+          </div>
+        </div>
+      </section>
+
+      <section className="data-center-cta section-pad" aria-labelledby="data-center-cta-title">
+        <div>
+          <p className="eyebrow">Start the discussion</p>
+          <h2 id="data-center-cta-title">{dataCenterPage.ctaHeading}</h2>
+          <p className="lead">{dataCenterPage.ctaCopy}</p>
+        </div>
+        <a className="button button-primary" href="#contact" onClick={handleDataCenterCta}>
+          {dataCenterPage.ctaLabel}
+        </a>
+      </section>
+    </>
+  );
+}
+
 function ContactSection({
   content,
   locale,
@@ -1246,10 +1543,11 @@ function ContactSection({
   const [notice, setNotice] = useState('');
   const [status, setStatus] = useState<FormStatus>('idle');
   const formStartTrackedRef = useRef(false);
-  const selectedProjectTypeLabel = selectedProjectType ? content.contact.projectTypes[selectedProjectType] : '';
+  const selectedProjectTypeLabel = selectedProjectType ? content.contact.projectTypes[selectedProjectType] || '' : '';
+  const availableProjectTypes = projectTypeOrder.filter((key) => content.contact.projectTypes[key]);
 
   function resolveProjectTypeKey(value: string): ProjectTypeKey | '' {
-    return projectTypeOrder.find((key) => content.contact.projectTypes[key] === value) || '';
+    return availableProjectTypes.find((key) => content.contact.projectTypes[key] === value) || '';
   }
 
   function analyticsProjectParams(projectType: ProjectTypeKey | '') {
@@ -1400,11 +1698,14 @@ function ContactSection({
               onChange={(event) => onProjectTypeChange(resolveProjectTypeKey(event.currentTarget.value))}
             >
               <option value="">{locale === 'fi' ? 'Valitse' : 'Choose'}</option>
-              {projectTypeOrder.map((typeKey) => (
-                <option key={typeKey} value={content.contact.projectTypes[typeKey]}>
-                  {content.contact.projectTypes[typeKey]}
-                </option>
-              ))}
+                {availableProjectTypes.map((typeKey) => {
+                  const label = content.contact.projectTypes[typeKey] || '';
+                  return (
+                    <option key={typeKey} value={label}>
+                      {label}
+                    </option>
+                  );
+                })}
             </select>
             {errors.projectType ? <small>{errors.projectType}</small> : null}
           </label>
@@ -1463,6 +1764,7 @@ function Footer({
   onContactNavigate,
   onConsentSettings,
   onLanguageChange,
+  onRouteNavigate,
 }: {
   content: SiteCopy;
   locale: Locale;
@@ -1470,6 +1772,7 @@ function Footer({
   onContactNavigate: () => void;
   onConsentSettings: () => void;
   onLanguageChange: (locale: Locale) => void;
+  onRouteNavigate: (path: string) => void;
 }) {
   return (
     <footer className="site-footer">
@@ -1481,8 +1784,13 @@ function Footer({
         {content.nav.map((item) => (
           <a
             key={item.id}
-            href={`#${item.id}`}
-            onClick={() => {
+            href={item.path || `#${item.id}`}
+            onClick={(event) => {
+              if (item.path) {
+                event.preventDefault();
+                onRouteNavigate(item.path);
+                return;
+              }
               if (item.id === 'contact') {
                 onContactNavigate();
               }
@@ -1567,6 +1875,10 @@ function ensureAlternate(hreflang: string): HTMLLinkElement {
     document.head.append(element);
   }
   return element;
+}
+
+function removeAlternate(hreflang: string) {
+  document.querySelector<HTMLLinkElement>(`link[rel="alternate"][hreflang="${hreflang}"]`)?.remove();
 }
 
 function ensureSchema(): HTMLScriptElement {

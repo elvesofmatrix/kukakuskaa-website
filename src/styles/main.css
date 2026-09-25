@@ -547,6 +547,191 @@ dd {
   box-shadow: var(--shadow);
 }
 
+.data-center-hero {
+  background: linear-gradient(180deg, #fffdf8, var(--page));
+}
+
+.data-center-hero h1 {
+  color: var(--graphite);
+  white-space: normal;
+}
+
+.data-center-hero p:not(.eyebrow),
+.data-center-card p {
+  color: #4f5553;
+  line-height: 1.7;
+}
+
+.data-center-media,
+.data-center-image {
+  width: 100%;
+}
+
+.data-center-image {
+  height: auto;
+  aspect-ratio: 40 / 27;
+  object-fit: cover;
+  box-shadow: var(--shadow);
+}
+
+.data-center-hero .button-secondary {
+  border-color: rgba(37, 40, 42, 0.2);
+  background: rgba(255, 253, 248, 0.72);
+  color: var(--graphite);
+}
+
+.data-center-card-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 1px;
+  border: 1px solid var(--line);
+  background: var(--line);
+}
+
+.data-center-card {
+  min-height: 320px;
+  padding: clamp(22px, 3vw, 34px);
+  background: var(--surface);
+}
+
+.data-center-card-marker {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 22px;
+}
+
+.data-center-card-marker .service-number {
+  flex: 0 0 auto;
+  margin: 0;
+}
+
+.data-center-card-line {
+  position: relative;
+  display: block;
+  flex: 1 1 auto;
+  min-width: 42px;
+  height: 1px;
+  background: var(--bluegrey);
+  opacity: 0.64;
+}
+
+.data-center-card-line::after {
+  position: absolute;
+  top: 50%;
+  right: -1px;
+  width: 7px;
+  height: 7px;
+  border-top: 1px solid var(--bluegrey);
+  border-right: 1px solid var(--bluegrey);
+  content: "";
+  transform: translateY(-50%) rotate(45deg);
+}
+
+.data-center-card:nth-child(2) .data-center-card-line {
+  opacity: 0.73;
+}
+
+.data-center-card:nth-child(3) .data-center-card-line {
+  opacity: 0.82;
+}
+
+.data-center-card:nth-child(4) .data-center-card-line {
+  opacity: 0.91;
+}
+
+.data-center-card:nth-child(5) .data-center-card-line {
+  opacity: 1;
+}
+
+.data-center-card:nth-child(5) .data-center-card-line::after {
+  content: none;
+}
+
+.data-center-card h3 {
+  font-size: clamp(1.55rem, 2.4vw, 2.25rem);
+}
+
+.data-center-partner .section-heading {
+  margin-bottom: 0;
+}
+
+.data-center-process {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: clamp(24px, 4vw, 38px) 0 clamp(28px, 5vw, 52px);
+}
+
+.data-center-process span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 42px;
+  padding: 9px 13px;
+  border: 1px solid rgba(255, 253, 248, 0.18);
+  background: rgba(255, 253, 248, 0.075);
+  color: rgba(255, 253, 248, 0.9);
+  font-size: 0.78rem;
+  font-weight: 760;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.data-center-process span + span::before {
+  margin-right: 10px;
+  color: #ccb48d;
+  content: "→";
+  font-size: 0.9rem;
+}
+
+.trust-panel .careful-note {
+  margin: 0;
+}
+
+.trust-panel .careful-note strong,
+.trust-panel .careful-note span {
+  display: block;
+}
+
+.trust-panel .careful-note strong {
+  margin-bottom: 10px;
+  color: var(--graphite);
+}
+
+.data-center-cta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: clamp(24px, 5vw, 68px);
+  background: var(--graphite);
+  color: #fffdf8;
+}
+
+.data-center-cta h2 {
+  color: #fffdf8;
+}
+
+.data-center-cta .eyebrow {
+  color: #ccb48d;
+}
+
+.data-center-cta .lead {
+  max-width: 760px;
+  color: rgba(255, 253, 248, 0.82);
+}
+
+.data-center-cta .button-primary {
+  border-color: rgba(255, 253, 248, 0.84);
+  background: #fffdf8;
+  color: var(--graphite);
+}
+
+.data-center-cta .button-primary:hover,
+.data-center-cta .button-primary:focus-visible {
+  border-color: #fffdf8;
+  background: #f4ead8;
+}
+
 .refined-list,
 .process-list {
   display: grid;
@@ -992,12 +1177,22 @@ dd {
   }
 
   .positioning-grid,
+  .data-center-card-grid,
   .service-row,
   .split-layout,
   .split-layout.reverse,
   .trust-panel,
   .contact-layout {
     grid-template-columns: 1fr;
+  }
+
+  .data-center-card {
+    min-height: auto;
+  }
+
+  .data-center-cta {
+    align-items: flex-start;
+    flex-direction: column;
   }
 
   .trust-panel {
@@ -1052,6 +1247,10 @@ dd {
 
   .project-film-media {
     aspect-ratio: 4 / 5;
+  }
+
+  .data-center-film-section .project-film-media {
+    aspect-ratio: 16 / 9;
   }
 
   .project-film-media.is-playing {

@@ -13,4 +13,9 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://kukakuskaapro.com/en" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://kukakuskaapro.com/" />
   </url>
+  <url>
+    <loc>https://kukakuskaapro.com/en/data-center-logistics-finland/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://kukakuskaapro.com/en/data-center-logistics-finland/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://kukakuskaapro.com/en/data-center-logistics-finland/" />
+  </url>
 </urlset>
