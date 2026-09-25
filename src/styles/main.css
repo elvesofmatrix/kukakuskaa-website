@@ -669,6 +669,14 @@ dd {
 }
 
 @media (min-width: 981px) {
+  .section-pad {
+    padding-block: 76px 24px;
+  }
+
+  .positioning-strip {
+    padding-bottom: 24px;
+  }
+
   .data-center-hero h1 {
     font-size: clamp(2.64rem, 4.72vw, 4.63rem);
   }
