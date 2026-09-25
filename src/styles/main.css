@@ -669,6 +669,19 @@ dd {
 }
 
 @media (min-width: 981px) {
+  .data-center-hero h1 {
+    font-size: clamp(2.64rem, 4.72vw, 4.63rem);
+  }
+
+  .data-center-services h2,
+  .data-center-film-section h2,
+  .data-center-partner h2,
+  .data-center-scope h2,
+  .data-center-cta h2,
+  .data-center-page .contact-section h2 {
+    font-size: clamp(2rem, 4.5vw, 4.25rem);
+  }
+
   .data-center-scroll-cue {
     position: absolute;
     top: calc(100% - 60px);

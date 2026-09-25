@@ -895,7 +895,7 @@ function App() {
         useEnglishMainPageNav={isDataCenterPage}
       />
 
-      <main>
+      <main className={isDataCenterPage ? 'data-center-page' : undefined}>
         {isDataCenterPage ? (
           <DataCenterLogisticsPage onContactIntent={setSelectedProjectType} />
         ) : (
@@ -1523,7 +1523,7 @@ function DataCenterLogisticsPage({ onContactIntent }: { onContactIntent: (intent
         </div>
       </section>
 
-      <section className="trust-section section-pad" aria-labelledby="data-center-scope-title">
+      <section className="trust-section data-center-scope section-pad" aria-labelledby="data-center-scope-title">
         <div className="trust-panel">
           <div>
             <p className="eyebrow">Scope clarity</p>
