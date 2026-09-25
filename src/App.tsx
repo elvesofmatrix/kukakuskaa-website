@@ -1478,6 +1478,7 @@ function DataCenterLogisticsPage({ onContactIntent }: { onContactIntent: (intent
             />
           </picture>
         </div>
+        <a className="data-center-scroll-cue" href="#data-center-services" aria-label="Scroll to Data Center Logistics service areas" />
       </section>
 
       <section className="data-center-services section-pad" id="data-center-services" aria-labelledby="data-center-services-title">
