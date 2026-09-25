@@ -851,7 +851,15 @@ function App() {
     setLocale(getLocaleFromPath());
     setPage(getPageFromPath());
     setMenuOpen(false);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.setTimeout(() => {
+      const targetId = window.location.hash.slice(1);
+      const target = targetId ? document.getElementById(targetId) : null;
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth' });
+        return;
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, 0);
   }
 
   function clearContactIntent() {
@@ -884,6 +892,7 @@ function App() {
         onLanguageChange={switchLanguage}
         onRouteNavigate={navigateToPath}
         homeHref={isDataCenterPage ? englishHomeRoute : '#top'}
+        useEnglishMainPageNav={isDataCenterPage}
       />
 
       <main>
@@ -949,6 +958,7 @@ function Header({
   onLanguageChange,
   onRouteNavigate,
   homeHref,
+  useEnglishMainPageNav,
 }: {
   content: SiteCopy;
   locale: Locale;
@@ -961,7 +971,15 @@ function Header({
   onLanguageChange: (locale: Locale) => void;
   onRouteNavigate: (path: string) => void;
   homeHref: string;
+  useEnglishMainPageNav: boolean;
 }) {
+  function getHeaderNavHref(item: NavItem) {
+    if (item.path) {
+      return item.path;
+    }
+    return useEnglishMainPageNav ? `${routes.en}/#${item.id}` : `#${item.id}`;
+  }
+
   function handleNavClick(itemId: string) {
     if (itemId === 'contact') {
       onContactNavigate();
@@ -1006,22 +1024,28 @@ function Header({
 
       <div className={`header-panel${menuOpen ? ' is-open' : ''}`} id="site-navigation">
         <nav className="site-nav" aria-label={content.navLabel}>
-          {content.nav.map((item) => (
-            <a
-              key={item.id}
-              href={item.path || `#${item.id}`}
-              onClick={(event) => {
-                if (item.path) {
-                  event.preventDefault();
-                  onRouteNavigate(item.path);
-                  return;
-                }
-                handleNavClick(item.id);
-              }}
-            >
-              {item.label}
-            </a>
-          ))}
+          {content.nav.map((item) => {
+            const href = getHeaderNavHref(item);
+            return (
+              <a
+                key={item.id}
+                href={href}
+                onClick={(event) => {
+                  if (item.path || useEnglishMainPageNav) {
+                    event.preventDefault();
+                    if (item.id === 'contact') {
+                      onContactNavigate();
+                    }
+                    onRouteNavigate(href);
+                    return;
+                  }
+                  handleNavClick(item.id);
+                }}
+              >
+                {item.label}
+              </a>
+            );
+          })}
         </nav>
 
         <div className="header-actions">
